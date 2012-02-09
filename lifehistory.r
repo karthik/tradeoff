@@ -15,18 +15,18 @@ max(eigen(A)$values)
 sJ.from.m <- function(m, a, b) a + b*m ## b should be negative
 
 #' <brief desc>
-#` 
+#`
 #' <full description>
 #` @param a <what param does>
 #` @param  b <what param does>
 #` @param  m.grid = seq(0.01 <what param does>
 #` @param  0.99 <what param does>
 #` @param  length = 20) <what param does>
-#` @keywords 
-#` @seealso 
+#` @keywords
+#` @seealso
 #` @return
 #` @alias
-#` @export 
+#` @export
 #` @examples
 #`
 tradeoff.curve <- function(a, b, m.grid = seq(0.01, 0.99, length = 20)) {
@@ -123,7 +123,7 @@ VD.tradeoff.curve.juvgamma <- function(a, b, m.grid = seq(0.01, 0.99, length = 2
     meanjuv <- 1/lambdaJ ## mean of the exponential
     ## we need the scale parameter. mean = shape * scale. sd = sqrt(shape) * scale. see ?dgamma.  so:
     juvscale <- meanjuv / juvshape
-    
+
     VDM <- VD.model(2,
                     marginal.durations = list(VD.dist("gamma", list(shape = juvshape, scale = juvscale)),
                       VD.dist("geomp1", list(prob = (1-sA)))),
