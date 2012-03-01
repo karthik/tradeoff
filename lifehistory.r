@@ -1,5 +1,5 @@
 # Examples from Perry; 01/26/12
-
+# now we're almost at 02/26/12
 library(ggplot2)
 library(varDev)
 
@@ -14,21 +14,6 @@ max(eigen(A)$values)
 ## tradeoff:
 sJ.from.m <- function(m, a, b) a + b*m ## b should be negative
 
-#' <brief desc>
-#`
-#' <full description>
-#` @param a <what param does>
-#` @param  b <what param does>
-#` @param  m.grid = seq(0.01 <what param does>
-#` @param  0.99 <what param does>
-#` @param  length = 20) <what param does>
-#` @keywords
-#` @seealso
-#` @return
-#` @alias
-#` @export
-#` @examples
-#`
 tradeoff.curve <- function(a, b, m.grid = seq(0.01, 0.99, length = 20)) {
   sJ.grid <- lambda <- numeric(length(m.grid))
   for(i in seq_along(m.grid)) {
@@ -42,11 +27,12 @@ tradeoff.curve <- function(a, b, m.grid = seq(0.01, 0.99, length = 20)) {
 
 example.tradeoff <- tradeoff.curve(0.9, -0.8)
 plot(lambda ~ m, example.tradeoff) ## there is a nice optimum there.
+ggplot(example.tradeoff,aes(m,lambda)) + geom_point() + opts(panel.background=theme_blank()) + opts(axis.line=theme_segment(colour = "black", size = 0.8, linetype = 1))
 
 ## varDev code:
 
 ## Here is the vignette that walks through how to set up a model
-vignette('varDev')
+ # vignette('varDev')
 
 ## Here is the model that should be equivalent to the matrix
 VDM <- VD.model(2,
@@ -66,7 +52,6 @@ r <- VD.solve.euler(mean.fec)
 
 ## Now let's imitate the fitness surface above:
 
-sJ.from.m <- function(m, a, b) a + b*m ## b should be negative
 
 VD.tradeoff.curve <- function(a, b, m.grid = seq(0.01, 0.99, length = 20)) {
   sJ.grid <- lambda <- numeric(length(m.grid))
