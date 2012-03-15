@@ -2,6 +2,7 @@
 # now we're almost at 02/26/12
 library(ggplot2)
 library(varDev)
+setwd('~/Github/postdoc/lh_tradeoff/')
 
 ## Matrix case:
 sJ <- 0.8
@@ -27,7 +28,7 @@ tradeoff.curve <- function(a, b, m.grid = seq(0.01, 0.99, length = 20)) {
 
 example.tradeoff <- tradeoff.curve(0.9, -0.8)
 plot(lambda ~ m, example.tradeoff) ## there is a nice optimum there.
-ggplot(example.tradeoff,aes(m,lambda)) + geom_point() + opts(panel.background=theme_blank()) + opts(axis.line=theme_segment(colour = "black", size = 0.8, linetype = 1))
+
 
 ## varDev code:
 
