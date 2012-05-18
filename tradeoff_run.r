@@ -33,13 +33,13 @@ plot3 <- tradeoff.plot(rbind(simple,with_juvgamma2))
 grid.arrange(plot2,plot3)
 
 ## @knitr with_correlation
-with_cor <- vd_tradeoff(a,b,sA,corrr=1)
-with_cor2 <- vd_tradeoff(a,b,sA,corrr=0.7)
+with_cor <- vd_tradeoff(a,b,sA, corr=1)
+with_cor2 <- vd_tradeoff(a,b,sA,corr=0.7)
 with_cor
 with_cor2
 
 ## @knitr plot-3
-plot4 <- tradeoff.plot(rbind(simple,with_cor))
+# plot4 <- tradeoff.plot(rbind(simple,with_cor))
 plot5 <- tradeoff.plot(rbind(simple,with_cor2))
-grid.arrange(plot4,plot5)
+plot5
 
