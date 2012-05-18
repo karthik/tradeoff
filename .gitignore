@@ -3,6 +3,7 @@ local_notes.R
 # osx noise
 .DS_Store
 profile
+temp.R
 
 # xcode noise
 build/*
