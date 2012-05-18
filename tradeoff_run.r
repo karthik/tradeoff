@@ -1,15 +1,13 @@
 library(plyr)
 library(ggplot2)
 library(gridExtra)
-library(varDev2)
+library(varDev)
 source('tradeoff_functions.r')
 
 
 ## @knitr setting_up_parameters
-sJ <- 0.8 # juvenile mortality sJ <- seq(0.1,.9,.1)
-m <- 0.3 # maturation
 sA <- 0.7 # adult mortality
-F <- 2 #fecundity
+Fec <- 2 #fecundity
 A <- matrix(c( (1-m)*sJ, m*sJ, F, sA), nrow = 2)
 max(eigen(A)$values)
 
@@ -17,7 +15,10 @@ max(eigen(A)$values)
 example.tradeoff <- tradeoff.curve(0.9, -0.8)
 example.tradeoff$type <- "Simple_Example"
 ## There is a nice optimum there.
-plot1 <- ggplot(example.tradeoff, aes(m, lambda)) + geom_point(size=2) + geom_line() + opts(title="An example tradeoff")
+
+## @knitr basic-tradeoff-plot
+plot1 <- tradeoff.plot(example.tradeoff, "An example tradeoff")
+
 
 
 ## @knitr jgrowth_survival
@@ -31,40 +32,12 @@ plot1 <- ggplot(example.tradeoff, aes(m, lambda)) + geom_point(size=2) + geom_li
 
 # OLD CODE IS BELOW
 
-library(ggplot2)
-library(varDev)
-library(gridExtra)
+# VD.model(num.stages, marginal.durations,
+#     marginal.death.times, fecundity = NULL,
+#     controls = NULL, stage.names = NULL, gauss.cov = NULL)
 
-setwd('~/Github/postdoc/lh_tradeoff/')
-source('tradeoff_functions.r')
-
-# Some assumptions
-# Growth with maturation rate m describes an exponential distribution of time spent as a juvenile, with mean = sd = 1/m. We can assume different gamma distributions ranging from this exponential to intermediate variation to negligible variation (fixed development time) with expected value = 1/m to be equivalent.
-
-# Adult survival rate (1 − μA) describes an exponential distribution of time spent as an adult, with mean = sd = 1/μA. Like the previous point, we can replace this with a range of gamma distributions with the same expected value.
-
-# Juvenile survival is defined in the same way, as a simple rate.
-
-# For example, for an assumed tradeoff between m and (1−μJ ), we can assume a gamma distribution for time spent as a juvenile, tJ, and instead define the tradeoff for E[1/tJ ] vs. (1 − μJ ). Then with my old code we can solve for the optimal value on the tradeoff.
-
-# And then we can also assume correlations between the two stages.
-
-# Make the below to be vectors......
-sJ <- 0.8 # juvenile mortality sJ <- seq(0.1,.9,.1)
-m <- 0.3 # maturation
-sA <- 0.7 # adult mortality
-F <- 2 #fecundity
-A <- matrix(c( (1-m)*sJ, m*sJ, F, sA), nrow = 2)
-max(eigen(A)$values)
-
-example.tradeoff <- tradeoff.curve(0.9, -0.8)
-example.tradeoff$type <- "Simple_Example"
-## There is a nice optimum there.
-plot1 <- ggplot(example.tradeoff, aes(m, lambda)) + geom_point(size=2) + geom_line() + opts(title="An example tradeoff")
-
-# ---------------------------------------------------------------------------
-
-VDM <- suppressWarnings(VD.model(2, marginal.durations = list(VD.dist("geomp1", list(prob = m)), VD.dist("geomp1", list(prob = (1-sA)))), marginal.death.times = list(VD.dist("geomp1", list(prob = (1-sJ))),VD.dist("infinite"))))
+VDM <- suppressWarnings(VD.model(2, marginal.durations = list(VD.dist("geomp1", list(prob = m)), VD.dist("geomp1", list(prob = (1-sA)))),
+	marginal.death.times = list(VD.dist("geomp1", list(prob = (1-sJ))),VD.dist("infinite"))))
 
 VDS <- VD.run(VDM)
 dev.table <- compile.dev.table(VDS)
@@ -98,7 +71,6 @@ plot2 <- ggplot(data,aes(m,lambda,colour=type)) + geom_point(size=3.5, aes(shape
 ## from the geometric.
 
 
-
 ## If this is set up correctly, then with juvshape = 1, we should get the same result as above
 VD.example.tradeoff.juvgamma <- VD.tradeoff.curve.juvgamma(0.9, -0.8, juvshape = 1)
 VD.example.tradeoff.juvgamma$type="Juv_Gamma"
@@ -114,9 +86,6 @@ data3 <- rbind(example.tradeoff,VD.example.tradeoff.juvgamma2)
 plot4 <- ggplot(data3,aes(m,lambda,colour=type)) + geom_point(size=3.5, aes(shape=type)) + opts(title="Juv Gamma, juvshape =4")
 
 ## Off the cuff that looks substantially different (the location of the peak shifted), so it is an interesting result.
-
-
-
 
 VD.example.tradeoff.cor <- VD.tradeoff.curve.cor(0.9, -0.8, cor = 0.7)
 plot(lambda ~ m, example.tradeoff, pch = 'x') ## switched order so both show
