@@ -1,7 +1,3 @@
-% Life-history tradeoffs trial runs
-% Karthik Ram
-% `r date()`
-
 # Summary
 In this effort we calculate optimal trade-offs between juvenile survival, fecundity, and adult survial. We work with models at two ends of the spectrum. First, we have full on matrix model, and at the other end, we have a model with correlation in time spent between stages.
 
@@ -21,45 +17,3 @@ All the code including this document + source is currently available on [github]
 * For example, for an assumed tradeoff between m and `(1−sJ)`, we can assume a gamma distribution for time spent as a juvenile, `tJ`, and instead define the tradeoff for `E[1/tJ]` vs. `(1 − sJ)`. Then with my old code we can solve for the optimal value on the tradeoff.
 
 * And then we can also assume correlations between the two stages.
-
-<!-- Setting up R -->
-`ro warning=FALSE, dev="png", fig.cap="", cache=FALSE or`
-
-<!-- read external r code -->
-```{r reading, echo=FALSE}
-read_chunk("../tradeoff_run.r")
-```
-
-## 1. Setting up parameters
-```{r tidy=TRUE}
-<<setting_up_parameters>>
-```
-### Next, we generate two sets of simple tradeoffs
-```{r tidy=TRUE}
-<<basic-tradeoff>>
-```
-
-```{r plot-fig, result="asis"}
-<<plot-1>>
-```
-
-
-## 2. With Juvgamma
-```{r tidy=TRUE}
-<<with_juvgamma>>
-```
-
-```{r plot-figb, result="asis"}
-<<plot-2>>
-```
-
-## 3.  With Correlation
-```{r tidy=TRUE}
-<<with_correlation>>
-```
-```{r plot-figc, result="asis"}
-<<plot-3>>
-```
-
-
-
