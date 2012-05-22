@@ -1,9 +1,40 @@
+# Tradeoff Functions
+# TOC
+# Setting up tradeoffs
+#     sJ.from.m
+#     sA.from.Fec
+#     Fec.from.m
+# dem.model (basic martix version)
+# tradeoff (calculates basic tradeoff)
+# vd_tradeoff (calculates tradeoff using varDev)
+#     run_vdm
+#     run_vdm_jg
+#     run_vdm_corr
+
+# param_combs (generates parameter combinations)
+# param_combs_jg (same as above with juvenile growth)
+# param_combs_corr (same as above with corrleation between stages)
+
+# tradeoff_plot
+# do_tradeoff (wrapper for tradeoff)
+# do_vd_tradeoff (wrapper for do_tradeoff)
+# ````````````````````````````````````````````
+
 
 # ---------------------------------------------------
 
 sJ.from.m <- function(m, a, b) {
   return(a + b*m)
   }
+
+sA.from.Fec <- function(sA, a, b) {
+  return(a + b*sA)
+  }
+
+ Fec.from.m <- function(m, a, b) {
+  return(a + b*m)
+  }
+
 
 # ---------------------------------------------------
 
@@ -82,33 +113,37 @@ run_vdm_corr <- function(m, sA, sJ, Fec, corr) {
     return(exp(r))
 } # end run_vdm_corr
 # ---------------------------------------------------
-vd_tradeoff <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL) {
+vd_tradeoff <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL, version="t1") {
   if(is.null(m))
     m <- seq(0.01, .99,length = 20)
 
    if(!is.numeric(sA))
     stop("Adult mortality not specified...\n")
 
-	sJ <- sJ.from.m(m,a,b)
-	df <- as.matrix(data.frame(m = m, sJ = sJ))
+    if(version=="t1")
+  	 sJ <- sJ.from.m(m,a,b)
+
 
     if(is.null(juvshape) && is.null(corr)) {
       message("running run_vdm()....\n")
-      lambda <- apply(df, 1, function(x) run_vdm(x[1],x[2], sA, Fec))
+      df <- as.matrix(data.frame(m = m, sJ = sJ, sA=sA, Fec=Fec))
+      lambda <- apply(df, 1, function(x) run_vdm(x[1],x[2], x[3], x[4]))
       df<- data.frame(m,sJ,lambda)
       df$type <- "juv_tradeoff"
       }
 
     if(!is.null(juvshape) && is.null(corr)) {
       message("running with run_vdm_jg()....\n")
-      lambda <- apply(df, 1, function(x) run_vdm_jg(x[1],x[2], sA, Fec, juvshape))
+      df <- as.matrix(data.frame(m = m, sJ = sJ, sA=sA, Fec=Fec, juvshape=juvshape))
+      lambda <- apply(df, 1, function(x) run_vdm_jg(x[1],x[2], x[3], x[4], x[5]))
       df <- data.frame(m,sJ,lambda)
       df$type <- "juvshape"
       }
 
     if(is.null(juvshape) && !is.null(corr)) {
       message("running with run_vdm_corr()....\n")
-      lambda <- apply(df, 1, function(x) run_vdm_corr(x[1],x[2], sA,Fec, corr))
+      df <- as.matrix(data.frame(m = m, sJ = sJ, sA=sA, Fec=Fec, corr=corr))
+      lambda <- apply(df, 1, function(x) run_vdm_corr(x[1], x[2], x[3], x[4], x[5]))
       df <- data.frame(m,sJ,lambda)
       df$type <- "corr"
       }
@@ -141,18 +176,22 @@ param_combs_corr <- function(a, b, sA, Fec, corr) {
 
 
 # =------------------------------------------
-tradeoff.plot <- function(dt, ptitle="") {
-  data <- dt[[1]]
-  params <- dt[2]
-  return(ggplot(data, aes(m, lambda, colour = type)) + geom_point(size = 3.5,shape = 16) + opts(title = ptitle))
-}
+tradeoff.plot <- function(data, ptitle="") {
+  # Make colors red, blue, and gold.
+  # make shapes also 3 different kinds.
+  if(length(unique(data$type))>3)
+    stop("Function not set up to deal with more than 3 categories at the moment")
 
+  base_colours <- c("#a8ddb5","#43a2ca","#e0f3db")
+  colours <- base_colours[1:length(unique(data$type))]
+  tplot <- ggplot(data, aes(m, lambda, colour = type)) + geom_point(size = 2.8,shape = 16) + opts(title = ptitle) + opts(panel.background = theme_blank()) + scale_color_manual(values=colours)
+  return(tplot)
+}
 
 # =------------------------------------------
 
 do_tradeoff <- function(tlist) {
-  toff <- tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL)
-  # This keeps all the parameters for each run in the same unit.
+  toff <- tradeoff(tlist$a, tlist$b, tlist$Fec, tlist$sA, m = NULL)
   basic_result <- list(data=toff,params=tlist)
   return(basic_result)
 }
@@ -160,9 +199,6 @@ do_tradeoff <- function(tlist) {
 # =------------------------------------------
 
 do_vd_tradeoff <- function(tlist) {
-  # if others are specified, do those functions.
-  # This needs error handling for failed calls for any below. Use try and tryCatch()
-
   if(len(tlist)==5)
     vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL)
 
@@ -171,7 +207,16 @@ do_vd_tradeoff <- function(tlist) {
 
   if(len(tlist)==6 && names(tlist)[5]=="corr")
     vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, tlist$corr, m = NULL)
-  # This keeps all the parameters for each run in the same unit.
+
   vd_result <- list(data=vd_toff,params=tlist)
   return(vd_result)
+}
+
+# =------------------------------------------
+
+arg_max <- function(data) {
+  smoothed <- smooth.spline(data$m,data$lambda,df=10)
+  maxy <- max(smoothed$y)
+  maxx <- smoothed$x[which(smoothed$y==maxy)]
+  return(list(maxx,maxy))
 }
