@@ -5,7 +5,7 @@ library(plyr)
 library(ggplot2)
 library(gridExtra)
 library(varDev2)
-source('~/Github/postdoc/tradeoff/tfunctions2.r')
+source('~/Github/postdoc/tradeoff/tradeoff_functions.r')
 
 # Full example. For the time being play with something simpler.
 # a <- seq(0.99,0.01, by=-0.01)

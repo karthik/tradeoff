@@ -4,6 +4,7 @@ local_notes.R
 .DS_Store
 profile
 temp.R
+other_notes.md
 
 # xcode noise
 build/*

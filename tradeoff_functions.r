@@ -93,28 +93,22 @@ vd_tradeoff <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL) {
 	df <- as.matrix(data.frame(m = m, sJ = sJ))
 
     if(is.null(juvshape) && is.null(corr)) {
-      # message("running run_vdm()....\n")
-        lambda <- apply(df, 1, function(x) run_vdm(x[1],x[2], Fec, sA))
-      # df <- ddply(df, .(id), transform, lambda = run_vdm(m, sA, sJ, Fec))
+      message("running run_vdm()....\n")
+      lambda <- apply(df, 1, function(x) run_vdm(x[1],x[2], sA, Fec))
       df<- data.frame(m,sJ,lambda)
       df$type <- "juv_tradeoff"
       }
 
     if(!is.null(juvshape) && is.null(corr)) {
-      # message("running with run_vdm_jg()....\n")
-      # df$juvshape <- juvshape
-      lambda <- apply(df, 1, function(x) run_vdm_jg(x[1],x[2], Fec, sA, juvshape))
-      # df <- ddply(df, .(id), transform, lambda = run_vdm_jg(m, sA, sJ, Fec, juvshape))
+      message("running with run_vdm_jg()....\n")
+      lambda <- apply(df, 1, function(x) run_vdm_jg(x[1],x[2], sA, Fec, juvshape))
       df <- data.frame(m,sJ,lambda)
       df$type <- "juvshape"
       }
 
     if(is.null(juvshape) && !is.null(corr)) {
-      # message("running with run_vdm_corr()....\n")
-      # df$corr <- corr
-      lambda <- apply(df, 1, function(x) run_vdm_corr(x[1],x[2], Fec, sA, corr))
-      # df <- ddply(df, .(id), transform, lambda = run_vdm_corr(m, sA, sJ, Fec, corr))
-      # df <- df[,-4]
+      message("running with run_vdm_corr()....\n")
+      lambda <- apply(df, 1, function(x) run_vdm_corr(x[1],x[2], sA,Fec, corr))
       df <- data.frame(m,sJ,lambda)
       df$type <- "corr"
       }
@@ -131,11 +125,26 @@ param_combs <- function(a, b, sA, Fec) {
   return(params)
 }
 
+param_combs_jg <- function(a, b, sA, Fec, juvshape) {
+  parameters  <- expand.grid(a,b,sA,Fec, juvshape)
+  parameters$sim_id <- paste0("JG",1:dim(parameters)[1])
+  params <- mapply(list, a=parameters[,1],b=parameters[,2],sA=parameters[,3],Fec=parameters[,4], juvshape = parameters[,5], sim_id = parameters[,6], SIMPLIFY=F)
+  return(params)
+}
+
+param_combs_corr <- function(a, b, sA, Fec, corr) {
+  parameters  <- expand.grid(a,b,sA,Fec,corr)
+  parameters$sim_id <- paste0("CO",1:dim(parameters)[1])
+  params <- mapply(list, a=parameters[,1],b=parameters[,2],sA=parameters[,3],Fec=parameters[,4], corr = parameters[,5],  sim_id = parameters[,6], SIMPLIFY=F)
+  return(params)
+}
+
+
 # =------------------------------------------
 tradeoff.plot <- function(dt, ptitle="") {
   data <- dt[[1]]
   params <- dt[2]
-  return(ggplot(data, aes(m, lambda, colour = type)) + geom_point(size = 4,shape = 16) + opts(title = ptitle))
+  return(ggplot(data, aes(m, lambda, colour = type)) + geom_point(size = 3.5,shape = 16) + opts(title = ptitle))
 }
 
 
@@ -143,9 +152,8 @@ tradeoff.plot <- function(dt, ptitle="") {
 
 do_tradeoff <- function(tlist) {
   toff <- tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL)
-  params <- tlist
   # This keeps all the parameters for each run in the same unit.
-  basic_result <- list(data=toff,params=params)
+  basic_result <- list(data=toff,params=tlist)
   return(basic_result)
 }
 
@@ -155,15 +163,14 @@ do_vd_tradeoff <- function(tlist) {
   # if others are specified, do those functions.
   # This needs error handling for failed calls for any below. Use try and tryCatch()
 
-  if(len(tlist)==4)
+  if(len(tlist)==5)
     vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL)
 
-  if(len(tlist)==5 && names(tlist)[5]=="juvgamma")
-    vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, juvshape = tlist$juvgamma, m = NULL)
+  if(len(tlist)==6 && names(tlist)[5]=="juvshape")
+    vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, juvshape = tlist$juvshape, m = NULL)
 
-  if(len(tlist)==5 && names(tlist)[5]=="corr")
+  if(len(tlist)==6 && names(tlist)[5]=="corr")
     vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, tlist$corr, m = NULL)
-
   # This keeps all the parameters for each run in the same unit.
   vd_result <- list(data=vd_toff,params=tlist)
   return(vd_result)
