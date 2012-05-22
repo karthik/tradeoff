@@ -1,6 +1,6 @@
 # Life-history tradeoff analysis
 
-I've made minor changes to package `varDev` and have renamed it to `varDev2` to avoid conflicts with the existing version. Install from [this source](https://github.com/karthikram/tradeoff/blob/master/varDev2_0.7.tar.gz) for the time being.
+I began revising package `varDev` but have abandoned that effort. I've only made very minor changes to the package in this revised version. 
 
 * Most current [results](https://github.com/karthikram/tradeoff/blob/master/results.md) ([pdf version](https://github.com/karthikram/tradeoff/blob/master/results.pdf))
 

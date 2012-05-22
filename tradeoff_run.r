@@ -1,48 +1,3 @@
-rm(list=ls())
-library(plyr)
-library(ggplot2)
-library(gridExtra)
-library(varDev2)
-source('~/Github/postdoc/tradeoff/tradeoff_functions.r')
-
-
-simple <- tradeoff(a, b, sA)
-tradeoff(.9, -.8, sA)
-tradeoff(.8,-.7, sA)
-tradeoff(.7, -.7, sA)
-tradeoff(.6, -.7, sA)
-tradeoff(.5, -.7, sA)
-vd_test <- vd_tradeoff(a, b, sA)
-# Plot both tradeoff together
-tradeoff.plot(rbind(simple,vd_test))
-
-
-# Now with a variation in juvenile development
-with_juvgamma <- vd_tradeoff(a, b, sA, juvshape =1)
-with_juvgamma2 <- vd_tradeoff(a, b, sA, juvshape = 1/(0.5^2))
-plot2 <- tradeoff.plot(rbind(simple,with_juvgamma))
-plot3 <- tradeoff.plot(rbind(simple,with_juvgamma2))
-# plot these data
-grid.arrange(plot2,plot3)
-
-
-# with correlation between juveline and adult development
-with_cor <- vd_tradeoff(a, b, sA, corr=.99)
-with_cor2 <- vd_tradeoff(a, b, sA,corr=0.7)
-plot4 <- tradeoff.plot(rbind(simple,with_cor))
-plot5 <- tradeoff.plot(rbind(simple,with_cor2))
-grid.arrange(plot4,plot5)
-
-
-
-do_tradeoff <- function(tlist) {
-	tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL)
-}
-
-do_vd_tradeoff <- function(tlist) {
-	# if others are specified, do those functions.
-	tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL)
-}
 
 #=========================================
 rm(list=ls())
@@ -52,19 +7,37 @@ library(gridExtra)
 library(varDev2)
 source('~/Github/postdoc/tradeoff/tfunctions2.r')
 
+# Full example. For the time being play with something simpler.
+# a <- seq(0.99,0.01, by=-0.01)
+# b <- seq(-.99, -0.01, by=0.01)
+# sA <- seq(0.1, 0.9, by=0.1)
+# Fec <- 2
+# parameters <- param_combs(a,b,sA,Fec)
 
-tradeoff(0.9, -0.8, 2, 0.7)
-vd_tradeoff(0.9, -0.8, 2, 0.7)
-vd_tradeoff(0.9, -0.8, 2, 0.7, juvshape = 1)
-vd_tradeoff(0.9, -0.8, 2, 0.7, corr = 0.3)
-
-
-a <- c(0.8, 0.6, 0.4, 0.2)
-b <- c(-0.8, -0.6, -0.4, -0.2)
-sA <- (0.7)
+a <- c(0.9,0.8, 0.6)
+b <- c(-0.8, -0.7, -0.6)
+sA <- 0.7
 Fec <- 2
-params <- mapply(list, a=a,b=b,sA=sA,Fec=Fec, SIMPLIFY=F)
+parameters  <- param_combs(a,b,sA,Fec)
+# This will allow me to track which simulations come from which parameters. I could plot this on the figure.
+
+# The basic tradooff case
 result <- llply(params, do_tradeoff, .progress = "text")
+# This is an example of how to push each list item through the plotting function.
+xx <- llply(result, tradeoff.plot)
+
+# Now moving to the vd tradeoff case.
+vd_result <- llply(params, do_vd_tradeoff, .progress = "text")
+
+# Now with juvgamma
+a <- c(0.9,0.8, 0.6)
+b <- c(-0.8, -0.7, -0.6)
+sA <- 0.7
+Fec <- 2
+juvgamma <- 1
+parameters  <- expand.grid(a,b,sA,Fec,juvgamma)
+params <- mapply(list, a=parameters[,1],b=parameters[,2],sA=parameters[,3],Fec=parameters[,4], juvgamma = parameters[,5], SIMPLIFY=F)
+vd_result_jg <- llply(params, do_vd_tradeoff, .progress = "text")
 
 
 

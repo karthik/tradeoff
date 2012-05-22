@@ -1,106 +1,33 @@
-# All functions necessary to calculate tradeoff curves.
-# TOC
 
-# 1. sJ.from.m - Generates juvenile mortality form maturation
-# 2. dem.model - contstructs the matrix model needed to run
-# 3. tradeoff - generates simple tradeoff curves for the matrix case.
-# 4. vd_tradeoff - a wrapper for the 3 functions above.
-#   4a.. run_vdm -
-#   4b. run_vdm_corr -
-#   4c. run_vdm_jg -
-# 5. Tradeoff between fecundity and adult survival.
-#   5a.
-#   5b.
-#   5c.
-# 9. Tradeoff between fecundity and juveline survival.
-#   9a.
-#   9b.
-#   9c.
+# ---------------------------------------------------
 
-# That's the basic framework. After that, I'll just be setting various tradeoff within this framework of functions.
-
-# -----------------------------------------
-# setting up a first tradeoff
-# Getting Juvenile mortality from maturation rate.
-
-#' sJ.from.m
-#'
-#' Generates the _____ matrix
-#' @param m maturation rate
-#' @param a I should know what this means
-#' @param b I should know what this means
-#' @export
-#' @keywords
-#' @seealso
-#' @return
-#' @alias
-#' @examples \dontrun{
-#' foo <- sJ.from.m(m, a, b)
-#'}
 sJ.from.m <- function(m, a, b) {
   return(a + b*m)
   }
 
-sA.from.F <- function() {
+# ---------------------------------------------------
 
-}
-
-m.from.F <- function() {
-
-}
-
-#'dem.model
-#'
-#'<full description>
-#' @param m <what param does>
-#' @param  sJ <what param does>
-#' @param  Fec <what param does>
-#' @param  sA <what param does>
-#' @export
-#' @keywords
-#' @seealso
-#' @return
-#' @alias
-#' @examples \dontrun{
-#'
-#'}
 dem.model <- function(m, sJ, Fec, sA) {
   mat <- matrix(c((1-m)*sJ, m*sJ, Fec, sA), nrow = 2)
   return (max(eigen(mat)$values))
  }
 
-# -------------------------------------------------
+ # ---------------------------------------------------
 
-#' tradeoff - function
-#'
-#'calculates tradeoff under the simple matrix condition
-#' @param a
-#' @param  b
-#' @param  sA Adult mortality
-#' @param  Fec Fecundity
-#' @param  m.grid = NULL The grid of maturation rates.
-#' @export
-#' @seealso
-#' @return
-#' @examples \dontrun{
-#' result <- tradeoff(0.9, -0.8)
-#' tradeoff.plot(result)
-#'}
-tradeoff <- function(a, b, sA, Fec = NULL, m.grid = NULL) {
-browser()
+tradeoff <- function(a,b, Fec, sA, m = NULL) {
+	if(is.null(m))
+		m <- seq(0.01, 0.99, length = 20)
 
-  if(is.null(m.grid))
-    m.grid <- seq(0.01, .99,length = 20)
-
-    df <- data.frame(id = 1:length(m.grid), m = m.grid)
-    browser()
-    df <- ddply(df, .(id),transform, sJ = sJ.from.m(m, a, b))
-    df <- ddply(df, .(id), transform, lambda = dem.model(m, sJ, Fec, sA))
-    df$type <- "simple"
-    return(df)
+	sJ <- sJ.from.m(m,a,b)
+	df <- as.matrix(data.frame(m = m, sJ = sJ))
+ 	lambda <- apply(df, 1, function(x) dem.model(x[1],x[2], Fec, sA))
+  type="simple"
+	return((data.frame(m,sJ,lambda,type)))
 }
 
-# -----------------------------------------
+
+# ---------------------------------------------------
+
 run_vdm <- function(m, sJ, sA, Fec) {
       vdmodel <- suppressMessages(VD.model(num.stages = 2,
           marginal.durations = list(VD.dist("geomp1", list(prob = m)),
@@ -115,7 +42,6 @@ run_vdm <- function(m, sJ, sA, Fec) {
     r <- VD.solve.euler(mean.fec)
     return(exp(r))
 } # end run_vdm
-
 
 # -----------------------------------------
 run_vdm_jg <- function(m, sA, sJ, Fec, juvshape) {
@@ -138,8 +64,6 @@ run_vdm_jg <- function(m, sA, sJ, Fec, juvshape) {
     return(exp(r))
 } # end run_vdm_jg
 
-
-
 # -----------------------------------------
 run_vdm_corr <- function(m, sA, sJ, Fec, corr) {
     my.gauss.cov <- matrix(c(1,corr,corr,1), nrow = 2)
@@ -157,54 +81,90 @@ run_vdm_corr <- function(m, sA, sJ, Fec, corr) {
     r <- VD.solve.euler(mean.fec)
     return(exp(r))
 } # end run_vdm_corr
-
-# -----------------------------------------
-#  Running the tradeoff, specifying the right params calls the correct function
-vd_tradeoff <- function(a, b, sA, m.grid = NULL, corr = NULL, juvshape = NULL) {
-  if(is.null(m.grid))
-    m.grid <- seq(0.01, .99,length = 20)
+# ---------------------------------------------------
+vd_tradeoff <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL) {
+  if(is.null(m))
+    m <- seq(0.01, .99,length = 20)
 
    if(!is.numeric(sA))
     stop("Adult mortality not specified...\n")
 
-
-    assign("Fec", Fec, envir = .GlobalEnv)
-   if(!is.numeric(Fec))
-      warning("Fecundity not found in global environment...\n")
-
-    df <- data.frame(id = 1:length(m.grid), m = m.grid)
-    df <- ddply(df, .(id),transform, sJ = sJ.from.m(m, a, b))
+	sJ <- sJ.from.m(m,a,b)
+	df <- as.matrix(data.frame(m = m, sJ = sJ))
 
     if(is.null(juvshape) && is.null(corr)) {
-      message("running run_vdm()....\n")
-      df <- ddply(df, .(id), transform, lambda = run_vdm(m, sA, sJ, Fec))
+      # message("running run_vdm()....\n")
+        lambda <- apply(df, 1, function(x) run_vdm(x[1],x[2], Fec, sA))
+      # df <- ddply(df, .(id), transform, lambda = run_vdm(m, sA, sJ, Fec))
+      df<- data.frame(m,sJ,lambda)
       df$type <- "juv_tradeoff"
       }
 
     if(!is.null(juvshape) && is.null(corr)) {
-      message("running with run_vdm_jg()....\n")
-      df$juvshape <- juvshape
-      df <- ddply(df, .(id), transform, lambda = run_vdm_jg(m, sA, sJ, Fec, juvshape))
-      df <- df[,-4]
+      # message("running with run_vdm_jg()....\n")
+      # df$juvshape <- juvshape
+      lambda <- apply(df, 1, function(x) run_vdm_jg(x[1],x[2], Fec, sA, juvshape))
+      # df <- ddply(df, .(id), transform, lambda = run_vdm_jg(m, sA, sJ, Fec, juvshape))
+      df <- data.frame(m,sJ,lambda)
       df$type <- "juvshape"
       }
 
     if(is.null(juvshape) && !is.null(corr)) {
-      message("running with run_vdm_corr()....\n")
-      df$corr <- corr
-      df <- ddply(df, .(id), transform, lambda = run_vdm_corr(m, sA, sJ, Fec, corr))
-      df <- df[,-4]
+      # message("running with run_vdm_corr()....\n")
+      # df$corr <- corr
+      lambda <- apply(df, 1, function(x) run_vdm_corr(x[1],x[2], Fec, sA, corr))
+      # df <- ddply(df, .(id), transform, lambda = run_vdm_corr(m, sA, sJ, Fec, corr))
+      # df <- df[,-4]
+      df <- data.frame(m,sJ,lambda)
       df$type <- "corr"
       }
 
     return(df)
 }
 
+# =------------------------------------------
 
-# 6. Plotting ```````````````````````
-# I need to create my ggplot theme since this wont work elsewhere.
-tradeoff.plot <- function(dt, ptitle="") {
-  return(ggplot(dt, aes(m, lambda, colour = type)) + geom_point(size = 4,shape = 3) + opts(title = ptitle))
+param_combs <- function(a, b, sA, Fec) {
+  parameters  <- expand.grid(a,b,sA,Fec)
+  parameters$sim_id <- paste0("S",1:dim(parameters)[1])
+  params <- mapply(list, a=parameters[,1],b=parameters[,2],sA=parameters[,3],Fec=parameters[,4], sim_id = parameters[,5], SIMPLIFY=F)
+  return(params)
 }
 
-# End
+# =------------------------------------------
+tradeoff.plot <- function(dt, ptitle="") {
+  data <- dt[[1]]
+  params <- dt[2]
+  return(ggplot(data, aes(m, lambda, colour = type)) + geom_point(size = 4,shape = 16) + opts(title = ptitle))
+}
+
+
+# =------------------------------------------
+
+do_tradeoff <- function(tlist) {
+  toff <- tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL)
+  params <- tlist
+  # This keeps all the parameters for each run in the same unit.
+  basic_result <- list(data=toff,params=params)
+  return(basic_result)
+}
+
+# =------------------------------------------
+
+do_vd_tradeoff <- function(tlist) {
+  # if others are specified, do those functions.
+  # This needs error handling for failed calls for any below. Use try and tryCatch()
+
+  if(len(tlist)==4)
+    vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL)
+
+  if(len(tlist)==5 && names(tlist)[5]=="juvgamma")
+    vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, juvshape = tlist$juvgamma, m = NULL)
+
+  if(len(tlist)==5 && names(tlist)[5]=="corr")
+    vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, tlist$corr, m = NULL)
+
+  # This keeps all the parameters for each run in the same unit.
+  vd_result <- list(data=vd_toff,params=tlist)
+  return(vd_result)
+}
