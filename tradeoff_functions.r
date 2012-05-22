@@ -37,8 +37,17 @@
 #' @examples \dontrun{
 #' foo <- sJ.from.m(m, a, b)
 #'}
-sJ.from.m <- function(m, a, b)  a + b*m
+sJ.from.m <- function(m, a, b) {
+  return(a + b*m)
+  }
 
+sA.from.F <- function() {
+
+}
+
+m.from.F <- function() {
+
+}
 
 #'dem.model
 #'
@@ -77,10 +86,14 @@ dem.model <- function(m, sJ, Fec, sA) {
 #' result <- tradeoff(0.9, -0.8)
 #' tradeoff.plot(result)
 #'}
-tradeoff <- function(a, b, sA, Fec, m.grid = NULL) {
+tradeoff <- function(a, b, sA, Fec = NULL, m.grid = NULL) {
+browser()
+
   if(is.null(m.grid))
     m.grid <- seq(0.01, .99,length = 20)
+
     df <- data.frame(id = 1:length(m.grid), m = m.grid)
+    browser()
     df <- ddply(df, .(id),transform, sJ = sJ.from.m(m, a, b))
     df <- ddply(df, .(id), transform, lambda = dem.model(m, sJ, Fec, sA))
     df$type <- "simple"
@@ -88,13 +101,13 @@ tradeoff <- function(a, b, sA, Fec, m.grid = NULL) {
 }
 
 # -----------------------------------------
-run_vdm <- function(m, sA, sJ, Fec) {
-      vdmodel <- VD.model(num.stages = 2,
+run_vdm <- function(m, sJ, sA, Fec) {
+      vdmodel <- suppressMessages(VD.model(num.stages = 2,
           marginal.durations = list(VD.dist("geomp1", list(prob = m)),
                       VD.dist("geomp1", list(prob = (1-sA)))),
           marginal.death.times = list(VD.dist("geomp1", list(prob = (1-sJ))),
                   VD.dist("infinite")),
-          fecundity = Fec)
+          fecundity = Fec))
 
     VDS <- VD.run(vdmodel)
     dev.table <- compile.dev.table(VDS)
@@ -108,15 +121,15 @@ run_vdm <- function(m, sA, sJ, Fec) {
 run_vdm_jg <- function(m, sA, sJ, Fec, juvshape) {
     lambdaJ <- -log(1-m) ## prob of not maturing for one time step is exp(-lambdaJ)
     meanjuv <- 1/lambdaJ ## mean of the exponential
-    ## we need the scale parameter. mean = shape * scale. sd = sqrt(shape) * scale. see ?dgamma.  so:
+    # we need the scale parameter. mean = shape * scale. sd = sqrt(shape) * scale. see ?dgamma.  so:
     juvscale <- meanjuv / juvshape
 
-          vdmodel <- VD.model(2,
+          vdmodel <- suppressMessages(VD.model(2,
                     marginal.durations = list(VD.dist("gamma", list(shape = juvshape, scale = juvscale)),
                       VD.dist("geomp1", list(prob = (1-sA)))),
                     marginal.death.times = list(VD.dist("geomp1", list(prob = (1-sJ))),
                   VD.dist("infinite")),
-                  fecundity = Fec)
+                  fecundity = Fec))
 
     VDS <- VD.run(vdmodel)
     dev.table <- compile.dev.table(VDS)
@@ -131,12 +144,12 @@ run_vdm_jg <- function(m, sA, sJ, Fec, juvshape) {
 run_vdm_corr <- function(m, sA, sJ, Fec, corr) {
     my.gauss.cov <- matrix(c(1,corr,corr,1), nrow = 2)
 
-    vdmodel <- VD.model(2,
+    vdmodel <- suppressMessages(VD.model(2,
                     marginal.durations = list(VD.dist("geomp1", list(prob = m)),
                       VD.dist("geomp1", list(prob = (1-sA)))),
                     marginal.death.times = list(VD.dist("geomp1", list(prob = (1-sJ))),
                   VD.dist("infinite")), gauss.cov = my.gauss.cov,
-                  fecundity = Fec)
+                  fecundity = Fec))
 
     VDS <- VD.run(vdmodel)
     dev.table <- compile.dev.table(VDS)
@@ -191,7 +204,7 @@ vd_tradeoff <- function(a, b, sA, m.grid = NULL, corr = NULL, juvshape = NULL) {
 # 6. Plotting ```````````````````````
 # I need to create my ggplot theme since this wont work elsewhere.
 tradeoff.plot <- function(dt, ptitle="") {
-  return(ggplot(dt, aes(m, lambda, colour = type)) + geom_point(size = 4) + opts(title = ptitle))
+  return(ggplot(dt, aes(m, lambda, colour = type)) + geom_point(size = 4,shape = 3) + opts(title = ptitle))
 }
 
 # End
