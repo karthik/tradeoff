@@ -5,6 +5,7 @@ local_notes.R
 profile
 temp.R
 other_notes.md
+docs/varDev.pdf
 
 # xcode noise
 build/*
