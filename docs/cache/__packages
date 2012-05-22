@@ -1,0 +1,17 @@
+gridExtra
+grid
+lubridate
+varDev2
+graphics
+grDevices
+utils
+datasets
+formatR
+knitr
+devtools
+plyr
+reshape2
+ggplot2
+stats
+methods
+base
