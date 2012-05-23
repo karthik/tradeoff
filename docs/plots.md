@@ -1,14 +1,21 @@
 % Life-history tradeoff example runs
 % Karthik Ram
-% `Wed May 23 12:41:53 2012`
+% `Wed May 23 12:45:31 2012`
 
 <!-- Setting up R -->
 
 
 
+
+
+
+
 ```r
-opts_knit$set(base.url='https://github.com/karthikram/tradeoff/raw/master/docs/figure/')
+opts_knit$set(base.url = "https://github.com/karthikram/tradeoff/raw/master/docs/figure/")
 ```
+
+
+
 
 
 
