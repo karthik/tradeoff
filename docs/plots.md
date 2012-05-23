@@ -1,24 +1,12 @@
 % Life-history tradeoff example runs
 % Karthik Ram
-% `Wed May 23 12:40:17 2012`
+% `Wed May 23 12:41:53 2012`
 
 <!-- Setting up R -->
 
 
 
 
-
-
-
-```
-## Loading required package: grid
-```
-
-
-
-```
-## data.table 1.8.0  For help type: help("data.table")
-```
 
 
 

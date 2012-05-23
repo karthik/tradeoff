@@ -6,11 +6,11 @@
 `ro warning=FALSE, dev="png", fig.cap="", cache=FALSE or`
 
 ```{r start, echo=FALSE}
-opts_knit$set(base.url='https://github.com/karthikram/tradeoff/raw/master/docs/figure')
 read_chunk("setup_tradeoff_1_plots.R")
 ```
 
 ```{r setup, echo=FALSE}
+opts_knit$set(base.url='https://github.com/karthikram/tradeoff/raw/master/docs/figure')
 ```
 
 ```{r Fec_2, echo=TRUE}
