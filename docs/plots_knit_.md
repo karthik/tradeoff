@@ -10,7 +10,7 @@ read_chunk("setup_tradeoff_1_plots.R")
 ```
 
 ```{r setup}
-opts_knit$set(base.url='https://github.com/karthikram/tradeoff/raw/master/docs/figure/')
+opts_knit$set(base.url='https://github.com/karthikram/tradeoff/raw/master/docs/')
 ```
 
 ```{r setupa, echo=FALSE}
