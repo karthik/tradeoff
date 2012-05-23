@@ -6,7 +6,9 @@
 
 
 
-
+```r
+opts_knit$set(base.url='https://github.com/karthikram/tradeoff/raw/master/docs/figure')
+```
 
 
 
@@ -24,27 +26,27 @@ Fec2_plots <- dlply(Fec2, .(id), assemble_plots)
 
 
 ## Plots, page 1
-![](figure/Fec_2_p1.png) 
+![](figure/Fec_2_p1.png)
 
-![](figure/Fec_2_p1.png) 
+![](figure/Fec_2_p1.png)
 
-![](figure/Fec_2_p2.png) 
+![](figure/Fec_2_p2.png)
 
-![](figure/Fec_2_p3.png) 
+![](figure/Fec_2_p3.png)
 
-![](figure/Fec_2_p4.png) 
+![](figure/Fec_2_p4.png)
 
-![](figure/Fec_2_p5.png) 
+![](figure/Fec_2_p5.png)
 
-![](figure/Fec_2_p6.png) 
+![](figure/Fec_2_p6.png)
 
-![](figure/Fec_2_p7.png) 
+![](figure/Fec_2_p7.png)
 
-![](figure/Fec_2_p8.png) 
+![](figure/Fec_2_p8.png)
 
-![](figure/Fec_2_p10.png) 
+![](figure/Fec_2_p10.png)
 
-![](figure/Fec_2_p11.png) 
+![](figure/Fec_2_p11.png)
 
 
 
@@ -59,27 +61,27 @@ Fec4_plots <- dlply(Fec4, .(id), assemble_plots)
 
 
 ## Plots, cont..
-![](figure/Fec_4_p1.png) 
+![](figure/Fec_4_p1.png)
 
-![](figure/Fec_4_p1.png) 
+![](figure/Fec_4_p1.png)
 
-![](figure/Fec_4_p2.png) 
+![](figure/Fec_4_p2.png)
 
-![](figure/Fec_4_p3.png) 
+![](figure/Fec_4_p3.png)
 
-![](figure/Fec_4_p4.png) 
+![](figure/Fec_4_p4.png)
 
-![](figure/Fec_4_p5.png) 
+![](figure/Fec_4_p5.png)
 
-![](figure/Fec_4_p6.png) 
+![](figure/Fec_4_p6.png)
 
-![](figure/Fec_4_p7.png) 
+![](figure/Fec_4_p7.png)
 
-![](figure/Fec_4_p8.png) 
+![](figure/Fec_4_p8.png)
 
-![](figure/Fec_4_p10.png) 
+![](figure/Fec_4_p10.png)
 
-![](figure/Fec_4_p11.png) 
+![](figure/Fec_4_p11.png)
 
 
 
@@ -96,27 +98,27 @@ Fec8_plots <- dlply(Fec8, .(id), assemble_plots)
 
 
 ## Plots, cont..
-![](figure/Fec_8_p1.png) 
+![](figure/Fec_8_p1.png)
 
-![](figure/Fec_8_p1.png) 
+![](figure/Fec_8_p1.png)
 
-![](figure/Fec_8_p2.png) 
+![](figure/Fec_8_p2.png)
 
-![](figure/Fec_8_p3.png) 
+![](figure/Fec_8_p3.png)
 
-![](figure/Fec_8_p4.png) 
+![](figure/Fec_8_p4.png)
 
-![](figure/Fec_8_p5.png) 
+![](figure/Fec_8_p5.png)
 
-![](figure/Fec_8_p6.png) 
+![](figure/Fec_8_p6.png)
 
-![](figure/Fec_8_p7.png) 
+![](figure/Fec_8_p7.png)
 
-![](figure/Fec_8_p8.png) 
+![](figure/Fec_8_p8.png)
 
-![](figure/Fec_8_p10.png) 
+![](figure/Fec_8_p10.png)
 
-![](figure/Fec_8_p11.png) 
+![](figure/Fec_8_p11.png)
 
 
 
@@ -132,25 +134,25 @@ Fec10_plots <- dlply(Fec10, .(id), assemble_plots)
 
 
 ## Plots, cont..
-![](figure/Fec_10_p1.png) 
+![](figure/Fec_10_p1.png)
 
-![](figure/Fec_10_p1.png) 
+![](figure/Fec_10_p1.png)
 
-![](figure/Fec_10_p2.png) 
+![](figure/Fec_10_p2.png)
 
-![](figure/Fec_10_p3.png) 
+![](figure/Fec_10_p3.png)
 
-![](figure/Fec_10_p4.png) 
+![](figure/Fec_10_p4.png)
 
-![](figure/Fec_10_p5.png) 
+![](figure/Fec_10_p5.png)
 
-![](figure/Fec_10_p6.png) 
+![](figure/Fec_10_p6.png)
 
-![](figure/Fec_10_p7.png) 
+![](figure/Fec_10_p7.png)
 
-![](figure/Fec_10_p8.png) 
+![](figure/Fec_10_p8.png)
 
-![](figure/Fec_10_p10.png) 
+![](figure/Fec_10_p10.png)
 
-![](figure/Fec_10_p11.png) 
+![](figure/Fec_10_p11.png)
 
