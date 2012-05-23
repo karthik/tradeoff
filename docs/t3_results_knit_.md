@@ -11,16 +11,16 @@ library(plyr)
 library(varDev2)
 library(lubridate)
 library(gridExtra)
+read_chunk("t3_example.r")
 ```
+
 
 # Summary
 In my attempts so far, I have set up and run various tradeoff scenarios. In my attempts so far, I have set up and run various tradeoff scenarios. The first set of scenarios look at tradeoffs between maturation rate `m` and juvenile survival `sJ`.
 
 ##1. Exploring tradeoffs between maturation rate and juvenile survival
 
-```{r reading, echo=FALSE}
-read_chunk("example_run.r")
-```
+
 
 ### Generating an initial set of tradeoffs
 ```{r parameters}
@@ -36,5 +36,5 @@ First we fit the really simple matrix case.
 ```{r simple_tradeoff_results}
 ```
 
-```{r plot, results="asis", cache=TRUE}
+```{r plot, echo=FALSE, results="asis", cache=TRUE}
 ```

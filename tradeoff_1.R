@@ -6,7 +6,7 @@ library(plyr)
 library(varDev2)
 library(lubridate)
 library(gridExtra)
-source('~/Github/postdoc/tradeoff/tradeoff_functions.R')
+source('tradeoff_functions.R')
 
 
 # Set up parameters

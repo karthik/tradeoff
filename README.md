@@ -1,6 +1,21 @@
 # Life-history tradeoff analysis
 
-I began revising package `varDev` but have abandoned that effort. I've only made very minor changes to the package in this revised version. 
+## Summary:
 
-* Most current [results](https://github.com/karthikram/tradeoff/blob/master/results.md) ([pdf version](https://github.com/karthikram/tradeoff/blob/master/results.pdf))
+## Results:
+
+#### Exploration of tradeoff between maturation and juvenile survival.
+
+* [results (web friendly)](http://github.com/karthikram/tradeoff/docs/t1_results.md)
+* [results (web friendly)](http://github.com/karthikram/tradeoff/docs/t1_results.pdf)
+
+#### Exploration of tradeoff between fecundity and adult survival
+
+* [results (web friendly)](http://github.com/karthikram/tradeoff/docs/t2_results.md)
+* [results (web friendly)](http://github.com/karthikram/tradeoff/docs/t2_results.pdf)
+
+#### Exploration of tradeoff between maturation and fecundity.
+
+* [results (web friendly)](http://github.com/karthikram/tradeoff/docs/t3_results.md)
+* [results (web friendly)](http://github.com/karthikram/tradeoff/docs/t3_results.pdf)
 

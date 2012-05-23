@@ -15,6 +15,7 @@ b <- -0.8
 sA <- 0.7
 Fec <- 2
 parameters <- param_combs(a,b,sA, Fec)
+parameters
 
 
 ## @knitr simple_tradeoff
@@ -25,6 +26,9 @@ t1_simple
 
 ## @knitr plot
 df <- data.frame(x=1:10, y=rnorm(10))
+    theme_update(panel.background = theme_blank(), panel.grid.major = theme_blank(),
+        panel.grid.minor = theme_blank(), panel.border = theme_blank(),
+        axis.line = theme_segment(colour = "black"))
 p1 <- ggplot(df, aes(x,y)) + geom_point()
 plist <- list(p1,p1,p1,p1,p1,p1,p1,p1,p1)
 n <- length(plist)

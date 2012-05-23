@@ -1,8 +1,9 @@
 % Life-history tradeoff example runs
 % Karthik Ram
-% `Tue May 22 14:35:25 2012`
+% `Tue May 22 17:27:58 2012`
 
 <!-- Setting up R -->
+
 
 
 
@@ -15,7 +16,6 @@ In my attempts so far, I have set up and run various tradeoff scenarios. In my a
 
 
 
-
 ### Generating an initial set of tradeoffs
 
 
@@ -25,6 +25,29 @@ b <- -0.8
 sA <- 0.7
 Fec <- 2
 parameters <- param_combs(a, b, sA, Fec)
+parameters
+```
+
+
+
+```
+## [[1]]
+## [[1]]$a
+## [1] 0.9
+## 
+## [[1]]$b
+## [1] -0.8
+## 
+## [[1]]$sA
+## [1] 0.7
+## 
+## [[1]]$Fec
+## [1] 2
+## 
+## [[1]]$sim_id
+## [1] "S1"
+## 
+## 
 ```
 
 
@@ -98,17 +121,6 @@ t1_simple
 
 
 
-
-
-
-```r
-df <- data.frame(x = 1:10, y = rnorm(10))
-p1 <- ggplot(df, aes(x, y)) + geom_point()
-plist <- list(p1, p1, p1, p1, p1, p1, p1, p1, p1)
-n <- length(plist)
-nCol <- floor(sqrt(n))
-do.call("grid.arrange", c(plist, ncol = nCol))
-```
 
 ![](figure/plot.png) 
 
