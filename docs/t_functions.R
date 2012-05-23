@@ -1,3 +1,4 @@
+## @knitr TOC
 # Tradeoff Functions
 # TOC
 # Setting up tradeoffs
@@ -42,6 +43,7 @@ do_tradeoff <- function(tlist) {
     basic_result <- list(data = toff, params = tlist)
     return(basic_result)
 }
+## @knitr vd_tradeoff_functions
 # ---------------------------------------------------
 run_vdm <- function(m, sJ, sA, Fec) {
     vdmodel <- suppressMessages(VD.model(num.stages = 2, marginal.durations = list(VD.dist("geomp1",
@@ -125,6 +127,7 @@ do_vd_tradeoff <- function(tlist) {
     vd_result <- list(data = vd_toff, params = tlist)
     return(vd_result)
 }
+## @knitr param_functions
 # =------------------------------------------
 # checks for tradeoff combinations that might result in unrealistic mortality rates.
 validity <- function(aa, bb) {
@@ -185,6 +188,7 @@ param_combs_corr <- function(a, b, sA, Fec, corr) {
     return(params)
 }
 # ---------------------------------------
+## @knitr spline_functions
 # A simple spline to smooth simulated points and find the max.
 arg_max <- function(data) {
     smoothed <- smooth.spline(data$m, data$lambda, df = 10)
@@ -192,9 +196,12 @@ arg_max <- function(data) {
     maxx <- smoothed$x[which(smoothed$y == maxy)]
     return(list(maxx, maxy))
 }
-# =------------------------------------------
-# The below 3 functions are for plotting.
 
+
+
+
+## @knitr plot_functions
+# These are the plotting functions.
 tradeoff.plot <- function(data, ptitle = "") {
           # Make colors red, blue, and gold.
           # make shapes also 3 different kinds.
@@ -207,21 +214,6 @@ tradeoff.plot <- function(data, ptitle = "") {
         theme_complete_bw()
     return(tplot)
 }
-
-# This combines the plots.
-do_tradeoff.plot <- function(p1, p2, p3) {
-    data <- rbind(p1$data, p2$data, p3$data)
-    params <- ldply(c(p1$params,p2$params,p3$params), data.frame)
-    a <- unique(params$a)
-    b <- unique(params$b)
-    sA <- unique(params$b)
-    juvgamma <- unique(params$juvgamma)
-    corr <- unique(params$corr)
-    main_t <- sprintf("a=%s, b=%s, sA=%s, juvgamma=%s, corr=%s", a,b,sA,juvgamma,corr)
-    cplot <- tradeoff.plot(data, main_t)
-}
-
-
 # ------------------------------------------------------------------
 # assembles plots in the same fig.
 assemble_plots <- function(dat) {

@@ -1,7 +1,10 @@
+varDev2
+lubridate
+multicore
+data.table
+stringr
 gridExtra
 grid
-lubridate
-varDev2
 graphics
 grDevices
 utils
