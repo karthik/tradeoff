@@ -1,8 +1,8 @@
-varDev2
-lubridate
-multicore
-data.table
 stringr
+data.table
+multicore
+lubridate
+varDev2
 gridExtra
 grid
 graphics

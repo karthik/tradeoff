@@ -2,6 +2,8 @@
 rm(list=ls())
 library(ggplot2)
 library(gridExtra)
+library(stringr)
+library(data.table)
 source('../tradeoff_functions.r')
 load('../results/t1_simple.rdata')
 load('../results/t1_vd.rdata')
