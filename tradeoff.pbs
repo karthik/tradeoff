@@ -1,6 +1,6 @@
 #PBS -A TG-DEB110016
 #PBS -q analysis
-#PBS -N wed_final
+#PBS -N frijun1
 #PBS -j oe
 #PBS -l walltime=2:00:00
 #PBS -l ncpus=72

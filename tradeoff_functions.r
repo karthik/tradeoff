@@ -38,7 +38,7 @@ tradeoff <- function(a, b, sA, Fec, m = NULL) {
 }
 # =------------------------------------------
 do_tradeoff <- function(tlist) {
-    toff <- tradeoff(tlist$a, tlist$b, tlist$Fec, tlist$sA, m = NULL)
+    toff <- tryCatch(tradeoff(tlist$a, tlist$b, tlist$Fec, tlist$sA, m = NULL), error=function(e) NULL)
     basic_result <- list(data = toff, params = tlist)
     return(basic_result)
 }
@@ -113,15 +113,23 @@ vd_tradeoff <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL,
 }
 # =------------------------------------------
 # The wrapper for the above 3 functions. The right function to call is determined by the number and type of arguments.
+
 do_vd_tradeoff <- function(tlist) {
-    if (length(tlist) == 5)
-        vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL)
-    if (length(tlist) == 6 && names(tlist)[5] == "juvshape")
-        vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, juvshape = tlist$juvshape,
-            m = NULL)
-    if (length(tlist) == 6 && names(tlist)[5] == "corr")
-        vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, tlist$corr,
-            m = NULL)
+
+    if (length(tlist) == 5) {
+vd_toff <- tryCatch(vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL) , error=function(e) NULL)
+}
+
+    if (length(tlist) == 6 && names(tlist)[5] == "juvshape") {
+        vd_toff <- tryCatch(vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, juvshape = tlist$juvshape,
+            m = NULL) , error=function(e) NULL)
+        }
+
+    if (length(tlist) == 6 && names(tlist)[5] == "corr") {
+        vd_toff <- tryCatch(vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, tlist$corr,
+            m = NULL), error=function(e) NULL)
+        }
+
     vd_result <- list(data = vd_toff, params = tlist)
     return(vd_result)
 }
@@ -200,7 +208,7 @@ tradeoff.plot <- function(data, ptitle = "") {
           # make shapes also 3 different kinds.
     if (length(unique(data$type)) > 3)
         stop("Function not set up to deal with more than 3 categories at the moment")
-    base_colours <- c("#a8ddb5", "#43a2ca", "#e0f3db")
+    base_colours <- c("#8a0033", "#68bac2", "#006d44")
     colours <- base_colours[1:length(unique(data$type))]
     tplot <- ggplot(data, aes(m, lambda, colour = type)) + geom_point(size = 2.8,
         shape = 16) + opts(title = ptitle) + scale_color_manual(values = colours) +
@@ -209,16 +217,14 @@ tradeoff.plot <- function(data, ptitle = "") {
 }
 
 # This combines the plots.
-do_tradeoff.plot <- function(p1, p2, p3) {
-    data <- rbind(p1$data, p2$data, p3$data)
-    params <- ldply(c(p1$params,p2$params,p3$params), data.frame)
+do_tradeoff.plot <- function(p1, p2) {
+    data <- rbind(p1$data, p2$data)
+    params <- ldply(c(p1$params,p2$params), data.frame)
     a <- unique(params$a)
     b <- unique(params$b)
     sA <- unique(params$b)
-    juvgamma <- unique(params$juvgamma)
-    corr <- unique(params$corr)
-    main_t <- sprintf("a=%s, b=%s, sA=%s, juvgamma=%s, corr=%s", a,b,sA,juvgamma,corr)
-    cplot <- tradeoff.plot(data, main_t)
+    main_t <- sprintf("a=%s, b=%s, sA=%s", a,b,sA)
+    return(cplot <- tradeoff.plot(data, main_t))
 }
 
 
@@ -229,7 +235,7 @@ assemble_plots <- function(dat) {
  s2 <- as.numeric(dat$sim_juv)
  s3 <- as.numeric(dat$sim_cor)
  title  <- sprintf("a:%s, b:%s, sA:%s, Fec:%s, juvshape:%s, corr:%s",dat$a, dat$b, dat$sA, dat$Fec, dat$juvshape, dat$corr)
- plot_data <- rbind(t1_vd[[s1]]$data, t1_juvshape[[s2]]$data, t1_corr[[s3]]$data)
+ plot_data <- rbind(t1_simple[[s1]]$data, t1_juvshape[[s2]]$data, t1_corr[[s3]]$data)
  tradeoff.plot(plot_data, title)
 }
 
@@ -244,9 +250,8 @@ theme_complete_bw <- function(base_size = 12) {
             "cm"), legend.background = theme_rect(colour = NA), legend.key = theme_rect(fill = NA,
             colour = "black", size = 0.25), legend.key.size = unit(1.2, "lines"),
         legend.text = theme_text(size = base_size * 0.8), legend.title = theme_text(size = base_size *
-            0.8, face = "bold", hjust = 0), legend.position = "right", panel.background = theme_rect(fill = NA,
-            colour = "black", size = 0.25), panel.border = theme_blank(), panel.grid.major = theme_line(colour = "black",
-            size = 0.05), panel.grid.minor = theme_line(colour = "black", size = 0.05),
+            0.8, face = "bold", hjust = 0), legend.position = "right", panel.background = theme_rect(fill = "#eaeae8",
+            colour = "black", size = 0.25), panel.border = theme_blank(), panel.grid.major = theme_blank(), panel.grid.minor = theme_blank(),
         panel.margin = unit(0.25, "lines"), strip.background = theme_rect(fill = NA,
             colour = NA), strip.text.x = theme_text(colour = "black", size = base_size *
             0.8), strip.text.y = theme_text(colour = "black", size = base_size *

@@ -1,0 +1,74 @@
+
+R version 2.15.0 (2012-03-30)
+Copyright (C) 2012 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> # This is to test the first tradeoff between maturation rate and juvenile survival.
+> rm(list = ls())
+> library(ggplot2)
+> library(plyr)
+> library(varDev2)
+> library(lubridate)
+> library(gridExtra)
+Loading required package: grid
+> library(multicore)
+> library(data.table)
+
+Attaching package: ‘data.table’
+
+The following object(s) are masked from ‘package:lubridate’:
+
+    hour, mday, month, wday, week, yday, year
+
+> source("tradeoff_functions.R")
+> # Set up parameters
+> # ------------------------------------------------------------------
+> a <- c(0.9, 0.8, 0.6)
+> b <- c(-0.8, -0.7, -0.6)
+> sA <- seq(0.3, 0.9, by = 0.1)
+> Fec <- c(2, 4, 8, 10)
+> parameters <- param_combs(a, b, sA, Fec)
+> # # run tradeoffs
+> # # ------------------------------------------------------------------
+> t1_simple <- mclapply(parameters, do_tradeoff, mc.cores = 72)
+> save(t1_simple, file='t1_simple.rdata')
+> t1_vd <- mclapply(parameters, do_vd_tradeoff, mc.cores = 72)
+> save(t1_vd, file='t1_vd.rdata')
+> # # tradeoffs with variable development
+> # # ------------------------------------------------------------------
+> juvshape <- c(1, 0.5, 0.25)
+> new_params <- param_combs_jg(a, b, sA, Fec, juvshape)
+> t1_juvshape <- mclapply(new_params, do_vd_tradeoff, mc.cores = 72)
+> # t1_juvshape <- llply(new_params, do_vd_tradeoff, .progress='text')
+> save(t1_juvshape, file = "t1_juvshape.rdata")
+> # tradeoffs with correlation among stages.
+> # # ------------------------------------------------------------------
+> corr <- seq(0.3, 0.9, by=0.1)
+> corr_params <- param_combs_corr(a,b,sA,Fec,corr)
+> t1_corr <- mclapply(corr_params, do_vd_tradeoff, mc.cores = 72)
+> save(t1_corr, file='t1_corr.rdata')
+> # calculate max(lambda) from a spline function
+> # ------------------------------------------------------------------
+> # plot results.
+> # ------------------------------------------------------------------
+> 
+> proc.time()
+    user   system  elapsed 
+9069.566   57.315  213.024 

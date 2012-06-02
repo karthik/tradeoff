@@ -5,7 +5,6 @@ library(plyr)
 library(varDev2)
 library(lubridate)
 library(gridExtra)
-library(multicore)
 library(data.table)
 source("tradeoff_functions.R")
 # Set up parameters
@@ -19,30 +18,31 @@ sA <- seq(0.1, 0.9, by = 0.1)
 # Fec <- c(2, 4, 8, 10)
 Fec <- 1:10
 parameters <- param_combs(a, b, sA, Fec)
+
+
 # # run tradeoffs
 # # ------------------------------------------------------------------
-t1_simple <- llply(parameters, do_tradeoff, .progress = 'text')
-t1_simple <- mclapply(parameters, do_tradeoff, mc.cores = 72)
-save(t1_simple, file='t1_simple_new.rdata')
-t1_vd <- llply(parameters, do_vd_tradeoff, .progress = 'text')
-t1_vd <- mclapply(parameters, do_vd_tradeoff, mc.cores = 72)
-save(t1_vd, file='t1_vd_new.rdata')
+t1_simple <- llply(sample(parameters,1), do_tradeoff, .progress = 'text')
+tradeoff.plot(t1_simple[[1]]$data)
+
+# save(t1_simple, file='t1_simple.rdata')
+t1_vd <- llply(sample(parameters,1), do_vd_tradeoff, .progress = 'text')
+# save(t1_vd, file='t1_vd.rdata')
+
 # # tradeoffs with variable development
 # # ------------------------------------------------------------------
 juvshape <- c(1, 0.5, 0.25)
-# This needs to be turned into a CV
 new_params <- param_combs_jg(a, b, sA, Fec, juvshape)
-t1_juvshape <- llply(new_params, do_vd_tradeoff, .progress = 'text')
-t1_juvshape <- mclapply(new_params, do_vd_tradeoff, mc.cores = 72)
-# t1_juvshape <- llply(new_params, do_vd_tradeoff, .progress='text')
-save(t1_juvshape, file = "t1_juvshape_new.rdata")
+t1_juvshape <- llply(sample(new_params,1), do_vd_tradeoff, .progress = 'text')
+# save(t1_juvshape, file = "t1_juvshape.rdata")
+
+
 # tradeoffs with correlation among stages.
 # # ------------------------------------------------------------------
-# corr <- seq(0.3, 0.9, by=0.1)
 corr <- seq(0.1, 0.9, by = 0.1)
 corr_params <- param_combs_corr(a,b,sA,Fec,corr)
-t1_corr <- mclapply(corr_params, do_vd_tradeoff, mc.cores = 72)
-save(t1_corr, file='t1_corr_new.rdata')
+t1_corr <- llply(sample(corr_params,1), do_vd_tradeoff, .progress = 'text')
+# save(t1_corr, file='t1_corr.rdata')
 # calculate max(lambda) from a spline function
 # ------------------------------------------------------------------
 # plot results.
