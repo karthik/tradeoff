@@ -130,8 +130,11 @@ vd_tradeoff <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL) {
 
 do_vd_tradeoff <- function(tlist) {
     message(sprintf("\n sim_id: %s \n", tlist$sim_id))
+
+
     if (length(tlist) == 5) {
-        vd_toff <- vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL)
+       vd_toff <- tryCatch(expr = evalWithTimeout(vd_tradeoff(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL) , timeout = 25),
+             TimeoutException = function(ex) "TimedOut")
 }
 
     if (length(tlist) == 6 && names(tlist)[5] == "juvshape") {
