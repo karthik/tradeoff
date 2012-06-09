@@ -1,9 +1,9 @@
 #PBS -A TG-DEB110016
 #PBS -q analysis
-#PBS -N split_juvshape_new
+#PBS -N juvshape
 #PBS -j oe
-#PBS -l walltime=2:00:00
-#PBS -l ncpus=72
+#PBS -l walltime=4:00:00
+#PBS -l ncpus=60
 #PBS -m a
 #PBS -m b
 #PBS -m e
@@ -17,4 +17,4 @@ export PATH=/sw/analysis/r/2.15.0/sles11.1_gnu4.3.4/R-2.15.0/bin:$PATH
 
 ## Job submission directory with all script and input files
 cd $PBS_O_WORKDIR
-R CMD BATCH tradeoff_1b.R
+R CMD BATCH juvshape.R
