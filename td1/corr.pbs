@@ -2,8 +2,8 @@
 #PBS -q analysis
 #PBS -N correlation
 #PBS -j oe
-#PBS -l walltime=4:00:00
-#PBS -l ncpus=72
+#PBS -l walltime=3:30:00
+#PBS -l ncpus=84
 #PBS -m a
 #PBS -m b
 #PBS -m e

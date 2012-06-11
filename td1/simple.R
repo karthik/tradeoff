@@ -1,8 +1,8 @@
 # simple.R
 source('initialize.R')
 source('tfunctions.R')
-total_cores <- 30
+load('basic_params.rda')
 
-t1_simple <- mclapply(parameters, do_tradeoff, mc.cores = total_cores)
-fname1 <- generate_filename("t1_simple")
+t1_simple <- llply(basic_params, do_tradeoff, .progress = 'text')
+fname1 <- generate_filename("results/t1_simple")
 save(t1_simple, file=fname1)

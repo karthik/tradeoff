@@ -26,13 +26,16 @@ source("tfunctions.R")
 # message("\n juvparams")
 # # Next, add in a range of cv values
 # # cv is defined as sqrt(juvshape)/juvshape
-# juvshape <- seq(1,50, by = 5)
+
+# jps <- function(x) return((1/x)*(1/x))
+# jss <- jps(seq(0.1, 1, by = 0.01))
+# juvshape <- jss
 # vd_params <- param_combs_jg(a, b, sA, Fec, juvshape)
 
 
 # message("\n Finally, corr_params")
 # # Now add in a correlation
-# corr <- seq(0.1, 0.9, by = 0.25)
+# corr <- seq(0.1, 0.9, by = 0.1)
 # corr_params <- param_combs_corr(a, b, sA, Fec, juvshape, corr)
 
 # # basic_params = 1215

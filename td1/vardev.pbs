@@ -2,8 +2,8 @@
 #PBS -q analysis
 #PBS -N vd_model
 #PBS -j oe
-#PBS -l walltime=2:00:00
-#PBS -l ncpus=40
+#PBS -l walltime=1:00:00
+#PBS -l ncpus=72
 #PBS -m a
 #PBS -m b
 #PBS -m e

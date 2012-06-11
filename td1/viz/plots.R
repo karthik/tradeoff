@@ -65,22 +65,8 @@ f2_plots <- llply(f2, tplot)
 
 
 
+f2_plots[29]
+f2_plots[31]
+f2_plots[32]
 
-
-
-# ------------------------------------------------------------------
-
-# Fecundity is 2
-ggplot(subset(all, Fec==2), aes(cv, mstar, colour = colors)) + geom_point(shape = 16) + facet_grid( ~ sA)
-
-# Fecundity is 3
-ggplot(subset(all, Fec==3), aes(cv, mstar, colour = colors)) + geom_point(shape = 16) + facet_grid( ~ sA)
-# Plots 1
-# With increasing fecundity and adult survival, the arg_max should increase, right?
-xx1 <- subset(all, all$a==0.9)
-xx1 <- subset(xx1, xx1$b==-0.1)
-plot1 <- ggplot(xx1, aes(sA, amax_y, colour=type)) + geom_point() +  scale_fill_brewer(palette='Set1') + scale_colour_brewer("type",palette="Set2") + facet_grid(~Fec)
-
-
-
-
+f2_plots[37]
