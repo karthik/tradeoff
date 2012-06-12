@@ -4,11 +4,6 @@ library(ggplot2)
 library(RColorBrewer)
 setwd('~/Github/postdoc/tradeoff/td1/viz')
 source('../tfunctions.R')
-load('../results/t1_simple_2012-06-11_12_22_50.528.rdata')
-load('../results/t1_vd_2012-06-10_01_11_25.rdata')
-load('../results/t1_juv_2012-06-11_15_19_46.rdata')
-load('../results/t1_corr_2012-06-11_15_10_53.rdata')
-
 
 
 # Next, write a function to read each list item, calcualate the max arg, then get the params and make a data.frame from it. So basically a ldply on a custom function.
@@ -27,7 +22,7 @@ vd_max$cv <- 1
 
 
 x <- ldply(t1_juvshape1, length)
-t1_juvshape <- t1_juvshape[-which(x$V1==0)]
+t1_juvshape <- t1_juvshape1[-which(x$V1==0)]
 
 juvshape_max <- ldply(t1_juvshape, function(x) {
 	if(x$data!="TimedOut") {
