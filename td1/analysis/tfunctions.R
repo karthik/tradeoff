@@ -34,6 +34,7 @@ do_tradeoff <- function(tlist) {
 }
 
 # ---------------------------------------------------
+# Running a vd model but with no variation in juvenile development or correlation among stages. Results should be identical to a matrix model case (with a small amout of simulation error)
 run_vdm <- function(m, sJ, sA, Fec) {
     vdmodel <- suppressMessages(VD.model(num.stages = 2, marginal.durations = list(VD.dist("geomp1",
         list(prob = m)), VD.dist("geomp1", list(prob = (1 - sA)))), marginal.death.times = list(VD.dist("geomp1",
@@ -45,7 +46,7 @@ run_vdm <- function(m, sJ, sA, Fec) {
     return(exp(r))
 }  # end run_vdm
 # -----------------------------------------
-
+# Running the model by adding compexity that juvenile development follows a gamma. We vary the cv on a scale of 0 - 1.
 run_vdm_jg <- function(m, sJ, sA, Fec, juvshape) {
 
     lambdaJ <- -log(1 - m)
@@ -68,6 +69,7 @@ run_vdm_jg <- function(m, sJ, sA, Fec, juvshape) {
 
 
 # -----------------------------------------
+# Running the model with the added complexity of correlation
 run_vdm_corr <- function(m, sJ, sA, Fec, juvshape, corr) {
     my.gauss.cov <- matrix(c(1, corr, corr, 1), nrow = 2)
     lambdaJ <- -log(1 - m)
@@ -187,6 +189,7 @@ param_combs <- function(a, b, sA, Fec) {
     others <- expand.grid(sA = sA, Fec = Fec)
     parameters <- ddply(others, .(sA, Fec), function(x) data.frame(base$a, base$b,
         sA = rep(x$sA, dim(base)[1]), Fec = rep(x$Fec, dim(base)[1])))
+    parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("S", 1:dim(parameters)[1])
     params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sA = parameters[,
         3], Fec = parameters[, 4], sim_id = parameters[, 5], SIMPLIFY = F)
@@ -198,9 +201,10 @@ param_combs_jg <- function(a, b, sA, Fec, juvshape) {
     valid <- param_check(a, b)
     base <- data.frame(a = valid[[1]], b = valid[[2]])
     others <- expand.grid(sA = sA, Fec = Fec, juvshape = juvshape)
-    parameters <- ddply(others, .(sA, Fec), function(x) data.frame(base$a, base$b,
+    parameters <- ddply(others, .(sA, Fec, juvshape), function(x) data.frame(base$a, base$b,
         sA = rep(x$sA, dim(base)[1]), Fec = rep(x$Fec, dim(base)[1]), juvshape = rep(x$juvshape,
             dim(base)[1])))
+    parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("JG", 1:dim(parameters)[1])
     params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sA = parameters[,
         3], Fec = parameters[, 4], juvshape = parameters[, 5], sim_id = parameters[,
@@ -213,9 +217,10 @@ param_combs_corr <- function(a, b, sA, Fec, juvshape, corr) {
     valid <- param_check(a, b)
     base <- data.frame(a = valid[[1]], b = valid[[2]])
     others <- expand.grid(sA = sA, Fec = Fec, juvshape = juvshape, corr = corr)
-    parameters <- ddply(others, .(sA, Fec), function(x) data.frame(base$a, base$b,
+    parameters <- ddply(others, .(sA, Fec, juvshape, corr), function(x) data.frame(base$a, base$b,
         sA = rep(x$sA, dim(base)[1]), Fec = rep(x$Fec, dim(base)[1]), juvshape = rep(x$juvshape, dim(base)[1]), corr = rep(x$corr,
             dim(base)[1])))
+    parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("CO", 1:dim(parameters)[1])
     params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sA = parameters[,
         3], Fec = parameters[, 4], juvshape = parameters[,5], corr = parameters[, 6], sim_id = parameters[,
