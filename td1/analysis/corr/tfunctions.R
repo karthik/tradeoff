@@ -8,6 +8,7 @@ sJ.from.m <- function(m, a, b) {
 
 # ---------------------------------------------------
 dem.model <- function(m, sJ, sA, Fec) {
+    # message(sprintf("%s, %s, %s, %s", m, sJ,sA, Fec))
     mat <- matrix(c((1 - m) * sJ, m * sJ, Fec, sA), nrow = 2)
     return(max(eigen(mat)$values))
 }
@@ -19,7 +20,7 @@ tradeoff <- function(a, b, sA, Fec, m = NULL) {
 
     sJ <- sJ.from.m(m, a, b)
     df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec))
-    lambda <- apply(df, 1, function(x) dem.model(x[1], x[2], x[3], x[4]))
+    lambda <- apply(df, 1, function(x) dem.model(x[1], x[2], x[4], x[3]))
     type <- "simple"
     return((data.frame(m, sJ, lambda, cv = 1, type)))
 }
@@ -46,6 +47,7 @@ run_vdm <- function(m, sJ, sA, Fec) {
 # -----------------------------------------
 
 run_vdm_jg <- function(m, sJ, sA, Fec, juvshape) {
+
     lambdaJ <- -log(1 - m)
     # prob of not maturing for one time step is exp(-lambdaJ)
     meanjuv <- 1/lambdaJ
@@ -66,6 +68,14 @@ run_vdm_jg <- function(m, sJ, sA, Fec, juvshape) {
 
 
 # -----------------------------------------
+# ## Now let's try including a correlation between juv and adult duration, but keeping the geometric distributions. But that is not the case below. Here we also make juvenile development follow a gamma distribution
+## For now I will generalize these by changing the shape parameter and
+## keeping the mean at its exponential-equivalent value.  To nail it
+## more precisely in the future, we can compute mean and sd of
+## discretized gammas and set them as needed. Or, we might decide that
+## is not necessary.  Another option, sticking with truly discrete
+## distributions, might be to use the negative binomial to generalize
+## from the geometric.
 run_vdm_corr <- function(m, sJ, sA, Fec, juvshape, corr) {
     my.gauss.cov <- matrix(c(1, corr, corr, 1), nrow = 2)
     lambdaJ <- -log(1 - m)
@@ -185,6 +195,7 @@ param_combs <- function(a, b, sA, Fec) {
     others <- expand.grid(sA = sA, Fec = Fec)
     parameters <- ddply(others, .(sA, Fec), function(x) data.frame(base$a, base$b,
         sA = rep(x$sA, dim(base)[1]), Fec = rep(x$Fec, dim(base)[1])))
+    parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("S", 1:dim(parameters)[1])
     params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sA = parameters[,
         3], Fec = parameters[, 4], sim_id = parameters[, 5], SIMPLIFY = F)
@@ -196,9 +207,10 @@ param_combs_jg <- function(a, b, sA, Fec, juvshape) {
     valid <- param_check(a, b)
     base <- data.frame(a = valid[[1]], b = valid[[2]])
     others <- expand.grid(sA = sA, Fec = Fec, juvshape = juvshape)
-    parameters <- ddply(others, .(sA, Fec), function(x) data.frame(base$a, base$b,
+    parameters <- ddply(others, .(sA, Fec, juvshape), function(x) data.frame(base$a, base$b,
         sA = rep(x$sA, dim(base)[1]), Fec = rep(x$Fec, dim(base)[1]), juvshape = rep(x$juvshape,
             dim(base)[1])))
+    parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("JG", 1:dim(parameters)[1])
     params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sA = parameters[,
         3], Fec = parameters[, 4], juvshape = parameters[, 5], sim_id = parameters[,
@@ -211,9 +223,10 @@ param_combs_corr <- function(a, b, sA, Fec, juvshape, corr) {
     valid <- param_check(a, b)
     base <- data.frame(a = valid[[1]], b = valid[[2]])
     others <- expand.grid(sA = sA, Fec = Fec, juvshape = juvshape, corr = corr)
-    parameters <- ddply(others, .(sA, Fec), function(x) data.frame(base$a, base$b,
+    parameters <- ddply(others, .(sA, Fec, juvshape, corr), function(x) data.frame(base$a, base$b,
         sA = rep(x$sA, dim(base)[1]), Fec = rep(x$Fec, dim(base)[1]), juvshape = rep(x$juvshape, dim(base)[1]), corr = rep(x$corr,
             dim(base)[1])))
+    parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("CO", 1:dim(parameters)[1])
     params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sA = parameters[,
         3], Fec = parameters[, 4], juvshape = parameters[,5], corr = parameters[, 6], sim_id = parameters[,
@@ -224,7 +237,7 @@ param_combs_corr <- function(a, b, sA, Fec, juvshape, corr) {
 # ---------------------------------------
 # A simple spline to smooth simulated points and find the max.
 arg_max <- function(data) {
-    smoothed <- smooth.spline(data$m, data$lambda, df = 10)
+    smoothed <- smooth.spline(data$m, data$lambda)
     maxy <- max(smoothed$y)
     maxx <- smoothed$x[which(smoothed$y == maxy)]
     return(list(maxx, maxy))

@@ -14,8 +14,11 @@ load('../results/t1_vd_2012-06-13_22_23_52.rdata')
 load("../results/t1_juvshape_cleaned.rdata")
 load("../results/cleaned_corr.rdata")
 
-working_simple <- ldply(t1_simple, function(x) data.frame(x[[2]]), .progress = 'text')
-working_vd <- ldply(t1_vd, function(x) data.frame(x[[2]]), .progress = 'text')
+# working_simple <- ldply(t1_simple, function(x) data.frame(x[[2]]), .progress = 'text')
+# working_vd <- ldply(t1_vd, function(x) data.frame(x[[2]]), .progress = 'text')
+# working_vd <- data.table(working_vd)
+# setkeyv(working_vd, "sim_id")
+# save(working_vd, file="working_vd.rdata")
 # working_corr_a <- ldply(t1_corr[1:12000], function(x) data.frame(x[[2]]), .progress = 'text')
 # working_corr_b <- ldply(t1_corr[12001:24000], function(x) data.frame(x[[2]]), .progress = 'text')
 # working_corr_c <- ldply(t1_corr[24001:36000], function(x) data.frame(x[[2]]), .progress = 'text')
@@ -30,7 +33,11 @@ working_vd <- ldply(t1_vd, function(x) data.frame(x[[2]]), .progress = 'text')
 # setkeyv(working_js, "sim_id")
 # save(working_corr, file="working_corr.rdata")
 # save(working_js, file="working_js.rdata")
-
+# working_simple <- data.table(working_simple)
+# setkeyv(working_simple, "sim_id")
+# save(working_simple, file="working_simple.rdata")
+load("working_simple.rdata")
+load("working_vd.rdata")
 load('working_corr.rdata')
 load('working_js.rdata')
 ## @ knitr pram_combinations
@@ -43,25 +50,6 @@ split_data <- dlply(cleaned_all, .(a,b,sA))
 combinations <- ldply(split_data, function(x) data.frame(a=unique(x$a), b=unique(x$b),sA=unique(x$sA), juvshape=x$juvshape,corr=unique(x$corr)))
 combinations <- combinations[,-1]
 combinations
-
-
-## @ knitr plot_1
-sub_group <- split_data[169:192]
-
-# ggplot(test, aes(cv, mstar, colour = as.character(corr))) + geom_point(aes(shape=type), size=3, alpha=1/2)  + scale_colour_brewer("type", palette="Set2") + opts(title="sA=0.7, F=2")
-
-# Looking at one specific tradeoff.
-
-
-# t2 <- subset(test, test$corr>=0.75 || is.na(test$corr))
-# # cv_range <- seq(0.1,1,by=0.1)
-# # t2_b = t2[(t2$cv %in% cv_range),]
-# t2_b <- t2
-# t2_b$corrtype <- c(rep("No corrlation",length(which(is.na(t2_b$corr)))), rep("Correlation",length(which(!is.na(t2_b$corr)))))
-
-# t3=t2[,-8]
-#  t4=t3[-duplicated(t3),]
-# ggplot(subset(t4), aes(cv, mstar, colour=as.character(corr))) + geom_point(aes(shape=type), size=5, alpha=1/4)   + opts(title="sA = 0.8, F = 2") + scale_colour_brewer("strength of correlation", palette="Set1")
 
 
 test <- split_data[[35]]
@@ -91,4 +79,76 @@ ggsave(file="working_plot1.pdf")
 # 2331 0.9 -0.7 0.8   2  25.000000 0.99 0.7321053 1.337380 CO65144     corr 0.2
 # 2566 0.9 -0.7 0.8   2 100.000000 0.99 0.7321053 1.369905 CO67644     corr 0.1
 
+c1 = working_corr[sim_id=="CO50144", which=T]
+j1 = working_js[sim_id=="JG10024", which=T]
+v1 <- working_vd[sim_id=="S24", which=T]
+tradeoff.plot(rbind(t1_juvshape[[j1]]$data, t1_corr[[c1]]$data))
+c2 <- working_corr[sim_id=="CO45144", which=T]
+tradeoff.plot(rbind(t1_vd[[v1]]$data, t1_corr[[c2]]$data))
+ggsave(file="corr1_cv.8.pdf")
 
+j2 <- working_js[sim_id=="JG11024", which=T]
+c3 <- working_corr[sim_id=="CO55144", which=T]
+tradeoff.plot(rbind(t1_juvshape[[j2]]$data, t1_corr[[c3]]$data))
+ggsave(file="cv0.6,corr0.9.pdf")
+
+
+#---------------------------------------
+
+new_test <- split_data[[36]]
+new_test <- data.frame(new_test)
+cv <- seq(0.1,.90, by=0.1)
+cv <- c(cv,1)
+new_test2 <- new_test[which(new_test$cv %in% cv),]
+new_test2 <- subset(new_test2, is.na(new_test2$corr) | new_test2$corr>.76)
+ggplot(new_test2, aes(cv, mstar, colour= type)) + geom_jitter(size =5) + opts(title="sA = 0.9, F = 2")
+ggsave("split_36.pdf")
+
+
+
+
+new_test2 <- split_data[[35]]
+new_test2 <- data.frame(new_test2)
+new_test2$xaxis <- cut(new_test2$cv, 10, labels=F)
+# cv <- seq(0.1,.90, by=0.05)
+# cv <- c(cv,1)
+# new_test22 <- new_test2[which(new_test2$cv %in% cv),]
+new_test22 <- new_test2[!duplicated(new_test2$mstar), ]
+ggplot(new_test22, aes(cv, mstar, colour= type)) + geom_point(size =5) + opts(title="sA = 0.8, F = 2")
+ggsave(file="dupes_removed.pdf")
+
+
+
+s1 <- working_simple[sim_id=="S24", which=T]
+v1 <- working_vd[sim_id=="S24", which=T]
+tradeoff.plot(rbind(t1_simple[[s1]]$data, t1_vd[[v1]]$data))
+
+
+j1 <- working_js[sim_id=="JG9094", which=T]
+j2 <- working_js[sim_id=="JG9154", which=T]
+j3 <- working_js[sim_id=="JG9484", which=T]
+j4 <- working_js[sim_id=="JG10024", which=T]
+j5 <- working_js[sim_id=="JG10374", which=T]
+j6 <- working_js[sim_id=="JG11424", which=T]
+
+new_js <- rbind(t1_juvshape[[j1]]$data,t1_juvshape[[j2]]$data,t1_juvshape[[j3]]$data,t1_juvshape[[j4]]$data,t1_juvshape[[j5]]$data,t1_juvshape[[j6]]$data)
+
+ggplot(new_js, aes(m,lambda, colour=as.factor(cv))) + geom_point(size=3)
+
+
+xx <- ldply(t1_juvshape, function(x) {
+return(data.frame(cv = 1/sqrt(x[[2]]$juvshape), sim_id=x[[2]]$sim_id))})
+
+all_data <- ldply(t1_juvshape, function(x) {
+	data <- x[[1]]
+	return(data)
+	})
+
+ggplot(all_data, aes(m, lambda, colour=cv)) + geom_point(size=3.2) + opts(title = "sA = 0.8, F = 2")
+
+ggplot(subset(all_data, cv>0.4), aes(m, lambda, colour=cv)) + geom_point(size=3.2) + opts(title = "sA = 0.8, F = 2")
+
+
+ggplot(juvshape_max, aes(cv, mstar)) + geom_point(size=5)
+
+ggplot(subset(juvshape_max, cv > 0.5), aes(cv, mstar)) + geom_point(size=5)

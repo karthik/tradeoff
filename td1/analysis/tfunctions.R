@@ -2,11 +2,13 @@
 # Tradeoff Functions
 
 # ---------------------------------------------------
+# Generate juvenile survival from maturity rate given a certain tradeoff
 sJ.from.m <- function(m, a, b) {
     return(a + b * m)
 }
 
 # ---------------------------------------------------
+# Calculate lamba from a basic matrix model
 dem.model <- function(m, sJ, sA, Fec) {
     # message(sprintf("%s, %s, %s, %s", m, sJ,sA, Fec))
     mat <- matrix(c((1 - m) * sJ, m * sJ, Fec, sA), nrow = 2)
@@ -14,6 +16,7 @@ dem.model <- function(m, sJ, sA, Fec) {
 }
 
  # ---------------------------------------------------
+ # Imposing the tradeoff for a simple matrix case
 tradeoff <- function(a, b, sA, Fec, m = NULL) {
     if (is.null(m))
         m <- seq(0.01, 0.99, length = 20)
@@ -27,6 +30,7 @@ tradeoff <- function(a, b, sA, Fec, m = NULL) {
 
 
 # =------------------------------------------
+# Running a simple tradeoff.
 do_tradeoff <- function(tlist) {
     toff <- tryCatch(tradeoff(tlist$a, tlist$b, tlist$Fec, tlist$sA, m = NULL), error=function(e) NULL)
     basic_result <- list(data = toff, params = tlist)
