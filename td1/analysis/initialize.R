@@ -12,4 +12,4 @@ suppressPackageStartupMessages(library(R.utils))
 message("Loading functions \n")
 source("tfunctions.R")
 
-# source('recreate_parameters.R')
+source('recreate_parameters.R')

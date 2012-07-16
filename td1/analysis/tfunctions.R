@@ -8,6 +8,18 @@ sJ.from.m <- function(m, a, b) {
 }
 
 # ---------------------------------------------------
+# Generate juvenile survival from maturity rate given a certain tradeoff
+sA.from.fec <- function(fec, a, b) {
+    return(a + b * fec)
+}
+
+# ---------------------------------------------------
+# Generate juvenile survival from maturity rate given a certain tradeoff
+m.from.fec <- function(fec, a, b) {
+    return(a + b * fec)
+}
+
+# ---------------------------------------------------
 # Calculate lamba from a basic matrix model
 dem.model <- function(m, sJ, sA, Fec) {
     # message(sprintf("%s, %s, %s, %s", m, sJ,sA, Fec))

@@ -19,14 +19,21 @@ vd_params <- param_combs_jg(a, b, sA, Fec, juvshape)
 
 message("\n Finally, corr_params")
 # Now add in a correlation
-corr <- c(0.1, 0.25, 0.5, 0.75, .99)
+# corr <- c(0.1, 0.25, 0.5, 0.75, .99)
+corr <- seq(0.1, 0.9, by = 0.1)
 corr_params <- param_combs_corr(a, b, sA, Fec, juvshape, corr)
 # length corr_params:
+# scenario 1:
+# a <- seq(0.9, 0.6, by = -0.1)
+# b <- seq(-0.9, -0.6, by = 0.1)
+# sA <- seq(0.6, 0.9, by = 0.1)
+# juvshape <- jps(seq(0.1, 1, by = 0.1))
+# corr <- c(0.1, 0.25, 0.5, 0.75, .99)
+# Fec <- 2
+# Resulting combinations =  40, 400, 2000
 
-
-# basic_params = 1215, 36855, 90
-# vd_params = 12150, 81090, 45050
-# corr_params = 48600, 225250, 180200, 216240, 180200. 90200
+# scenario 2 (current scenario), increased range of correlations
+# Resulting combinations = 40, 400, 3600
 
 message ("Now saving the params to disk \n")
 save(basic_params, file="basic_params.rda")
