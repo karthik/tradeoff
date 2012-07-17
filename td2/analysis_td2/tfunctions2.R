@@ -3,48 +3,35 @@
 
 # ---------------------------------------------------
 # Generate juvenile survival from maturity rate given a certain tradeoff
-sJ.from.m <- function(m, a, b) {
-    return(a + b * m)
-}
-
-# ---------------------------------------------------
-# Generate juvenile survival from maturity rate given a certain tradeoff
-fec.from.sA <- function(sA, a, b) {
-    return(a + b * sA)
-}
-
-# ---------------------------------------------------
-# Generate juvenile survival from maturity rate given a certain tradeoff
-fec.from.m <- function(m, a, b) {
-    return(2 + (a + b * (m*2)))
+fec.from.sA <- function(a =a, b=b, sA=sA) {
+    return(2 + (a + b * (sA*4)))
 }
 
 # ---------------------------------------------------
 # Calculate lamba from a basic matrix model
 dem.model <- function(m, sJ, sA, Fec) {
-    # message(sprintf("%s, %s, %s, %s", m, sJ,sA, Fec))
+    message(sprintf("\n %s, %s, %s, %s", m, sJ,sA, Fec))
     mat <- matrix(c((1 - m) * sJ, m * sJ, Fec, sA), nrow = 2)
     return(max(eigen(mat)$values))
 }
 
  # ---------------------------------------------------
  # Imposing the tradeoff for a simple matrix case
-tradeoff <- function(a, b, sA, Fec, m = NULL) {
-    if (is.null(m))
-        m <- seq(0.01, 0.99, length = 20)
-
-    sJ <- sJ.from.m(m, a, b)
+tradeoff <- function(a, b, sJ, m, sA = NULL) {
+    if (is.null(sA))
+    sA <- seq(0.1, 0.9, length = 20)
+    Fec <- fec.from.sA( a = a, b = b, sA = sA)
     df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec))
-    lambda <- apply(df, 1, function(x) dem.model(x[1], x[2], x[4], x[3]))
+    lambda <- apply(df, 1, function(x) dem.model(x[1], x[2], x[3], x[4]))
     type <- "simple"
-    return((data.frame(m, sJ, lambda, cv = 1, type)))
+    return((data.frame(sA, Fec, lambda, cv = 1, type)))
 }
 
 
 # =------------------------------------------
 # Running a simple tradeoff.
 do_tradeoff <- function(tlist) {
-    toff <- tryCatch(tradeoff(tlist$a, tlist$b, tlist$Fec, tlist$sA, m = NULL), error=function(e) NULL)
+    toff <- tryCatch(tradeoff(tlist$a, tlist$b, tlist$sJ, tlist$m, sA = NULL), error=function(e) NULL)
     basic_result <- list(data = toff, params = tlist)
     return(basic_result)
 }
@@ -107,11 +94,10 @@ run_vdm_corr <- function(m, sJ, sA, Fec, juvshape, corr) {
 # ---------------------------------------------------
 
 
-vd_tradeoff_basic <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL) {
-    if (is.null(m))
-        m <- seq(0.01, 0.99, length = 20)
+vd_tradeoff_basic <- function(a, b, sA = NULL, m = NULL, corr = NULL, juvshape = NULL) {
+        sA <- seq(0.1, 0.9, length = 20)
+        Fec <- fec.from.sA(sA, a, b)
 
-        sJ <- sJ.from.m(m, a, b)
         df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec))
         lambda <- apply(df, 1, function(x) run_vdm(x[1], x[2], x[3], x[4]))
         df <- data.frame(m, sJ, lambda, cv=1)
@@ -120,11 +106,11 @@ vd_tradeoff_basic <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = N
     }
 
 
-vd_tradeoff_jg <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL) {
+vd_tradeoff_jg <- function(a, b, sA = NULL, m = NULL, corr = NULL, juvshape = NULL) {
     if (is.null(m))
-        m <- seq(0.01, 0.99, length = 20)
+        sA <- seq(0.1, 0.9, length = 20)
+       Fec <- fec.from.sA(sA, a, b)
 
-        sJ <- sJ.from.m(m, a, b)
         df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec, juvshape = juvshape))
         lambda <- apply(df, 1, function(x) run_vdm_jg(x[1], x[2], x[3], x[4], x[5]))
         cv <- 1/sqrt(juvshape)
@@ -134,11 +120,10 @@ vd_tradeoff_jg <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL
     }
 
 
-vd_tradeoff_corr <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL) {
+vd_tradeoff_corr <- function(a, b, m = NULL, sA = NULL, corr = NULL, juvshape = NULL) {
     if (is.null(m))
-        m <- seq(0.01, 0.99, length = 20)
-
-        sJ <- sJ.from.m(m, a, b)
+        sA <- seq(0.1, 0.9, length = 20)
+       Fec <- fec.from.sA(sA, a, b)
         df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec, juvshape = juvshape, corr = corr))
         lambda <- apply(df, 1, function(x) run_vdm_corr(x[1], x[2], x[3], x[4], x[5], x[6]))
            cv <- 1/sqrt(juvshape)
@@ -154,23 +139,22 @@ vd_tradeoff_corr <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NU
 
 
 do_vd_tradeoff <- function(tlist) {
-    if (length(tlist) == 5) {
+    if (length(tlist) == 4) {
         message('running run_vdm()....\n')
-       vd_toff <- tryCatch(expr = evalWithTimeout(vd_tradeoff_basic(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL) , timeout = 25),
+       vd_toff <- tryCatch(expr = evalWithTimeout(vd_tradeoff_basic(tlist$a, tlist$b, tlist$m, sA = NULL) , timeout = 25),
              TimeoutException = function(ex) "TimedOut")
 }
 
-    if (length(tlist) == 6) {
+    if (length(tlist) == 5) {
         message(sprintf('running run_vdm_jg: %s\n', tlist$sim_id))
-         vd_toff <- suppressWarnings(tryCatch(expr = evalWithTimeout(vd_tradeoff_jg(tlist$a, tlist$b, tlist$sA, tlist$Fec, juvshape = tlist$juvshape,
-            m = NULL) , timeout = 40),
+         vd_toff <- suppressWarnings(tryCatch(expr = evalWithTimeout(vd_tradeoff_jg(tlist$a, tlist$b, tlist$m, juvshape = tlist$juvshape,
+            sA = NULL) , timeout = 40),
              TimeoutException = function(ex) "TimedOut"))
         }
 
-    if (length(tlist) == 7) {
+    if (length(tlist) == 6) {
         message(sprintf('running run_vdm_corr: %s\n', tlist$sim_id))
-              vd_toff <- suppressWarnings(tryCatch(expr = evalWithTimeout(vd_tradeoff_corr(tlist$a, tlist$b, tlist$sA, tlist$Fec, juvshape = tlist$juvshape,
-            tlist$corr, m = NULL) , timeout = 40),
+              vd_toff <- suppressWarnings(tryCatch(expr = evalWithTimeout(vd_tradeoff_corr(tlist$a, tlist$b, tlist$m, juvshape = tlist$juvshape, tlist$corr, sA = NULL) , timeout = 40),
              TimeoutException = function(ex) "TimedOut"))
         }
 
@@ -180,9 +164,9 @@ do_vd_tradeoff <- function(tlist) {
 # =------------------------------------------
 # checks for tradeoff combinations that might result in unrealistic mortality rates.
 validity <- function(aa, bb) {
-    mm <- seq(0.01, 0.99, length = 20)
-    sJ <- sJ.from.m(mm, aa, bb)
-    if (min(sJ) < 0) {
+    sA <- seq(0.1, 0.9, length = 20)
+    Fec <- fec.from.sA(sA, aa, bb)
+    if (min(Fec) < 0) {
         return(FALSE)
     } else {
         return(TRUE)
@@ -199,50 +183,51 @@ param_check <- function(ax, bx) {
 }
 
 # Generates a list of tradeoff combinations that allow all combinations to be pushed through any tradeoff model. First one generates the simple case with no variation in juvenile growth or correlation among stages.
-param_combs <- function(a, b, sA, Fec) {
+param_combs <- function(a, b, sJ, m) {
     valid <- param_check(a, b)
     base <- data.frame(a = valid[[1]], b = valid[[2]])
-    others <- expand.grid(sA = sA, Fec = Fec)
-    parameters <- ddply(others, .(sA, Fec), function(x) data.frame(base$a, base$b,
-        sA = rep(x$sA, dim(base)[1]), Fec = rep(x$Fec, dim(base)[1])))
+    others <- expand.grid(sJ = sJ, m = m)
+    parameters <- ddply(others, .(sJ, m), function(x) data.frame(base$a, base$b,
+        sJ = rep(x$sJ, dim(base)[1]), m = rep(x$m, dim(base)[1])))
     parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("S", 1:dim(parameters)[1])
-    params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sA = parameters[,
-        3], Fec = parameters[, 4], sim_id = parameters[, 5], SIMPLIFY = F)
+    params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sJ = parameters[,
+        3], m = parameters[, 4], sim_id = parameters[, 5], SIMPLIFY = F)
     return(params)
 }
 
 
-param_combs_jg <- function(a, b, sA, Fec, juvshape) {
+param_combs_jg <- function(a, b, sJ, m, juvshape) {
     valid <- param_check(a, b)
     base <- data.frame(a = valid[[1]], b = valid[[2]])
-    others <- expand.grid(sA = sA, Fec = Fec, juvshape = juvshape)
-    parameters <- ddply(others, .(sA, Fec, juvshape), function(x) data.frame(base$a, base$b,
-        sA = rep(x$sA, dim(base)[1]), Fec = rep(x$Fec, dim(base)[1]), juvshape = rep(x$juvshape,
+    others <- expand.grid(sJ = sJ, m = m, juvshape = juvshape)
+    parameters <- ddply(others, .(sJ, m, juvshape), function(x) data.frame(base$a, base$b,
+        sJ = rep(x$sJ, dim(base)[1]), m = rep(x$m, dim(base)[1]), juvshape = rep(x$juvshape,
             dim(base)[1])))
     parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("JG", 1:dim(parameters)[1])
-    params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sA = parameters[,
-        3], Fec = parameters[, 4], juvshape = parameters[, 5], sim_id = parameters[,
+    params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sJ = parameters[,
+        3], m = parameters[, 4], juvshape = parameters[, 5], sim_id = parameters[,
         6], SIMPLIFY = F)
     return(params)
 }
 
 
-param_combs_corr <- function(a, b, sA, Fec, juvshape, corr) {
+param_combs_corr <- function(a, b, sJ, m, juvshape, corr) {
     valid <- param_check(a, b)
     base <- data.frame(a = valid[[1]], b = valid[[2]])
-    others <- expand.grid(sA = sA, Fec = Fec, juvshape = juvshape, corr = corr)
-    parameters <- ddply(others, .(sA, Fec, juvshape, corr), function(x) data.frame(base$a, base$b,
-        sA = rep(x$sA, dim(base)[1]), Fec = rep(x$Fec, dim(base)[1]), juvshape = rep(x$juvshape, dim(base)[1]), corr = rep(x$corr,
+    others <- expand.grid(sJ = sJ, m = m, juvshape = juvshape, corr = corr)
+    parameters <- ddply(others, .(sJ, m, juvshape, corr), function(x) data.frame(base$a, base$b,
+        sJ = rep(x$sJ, dim(base)[1]), m = rep(x$m, dim(base)[1]), juvshape = rep(x$juvshape, dim(base)[1]), corr = rep(x$corr,
             dim(base)[1])))
     parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("CO", 1:dim(parameters)[1])
-    params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sA = parameters[,
-        3], Fec = parameters[, 4], juvshape = parameters[,5], corr = parameters[, 6], sim_id = parameters[,
+    params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sJ = parameters[,
+        3], m = parameters[, 4], juvshape = parameters[,5], corr = parameters[, 6], sim_id = parameters[,
         7], SIMPLIFY = F)
     return(params)
 }
+
 
 # ---------------------------------------
 # A simple spline to smooth simulated points and find the max.

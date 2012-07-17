@@ -1,0 +1,15 @@
+# Initialize basic libraries and functions
+rm(list = ls())
+# setwd('~/Github/postdoc/tradeoff/td2/analysis_td2')
+message("Loading libraries \n")
+library(plyr)
+library(varDev2)
+suppressPackageStartupMessages(library(lubridate))
+library(stringr)
+library(multicore)
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(R.utils))
+message("Loading functions \n")
+source("tfunctions2.R")
+
+# source('recreate_parameters.R')

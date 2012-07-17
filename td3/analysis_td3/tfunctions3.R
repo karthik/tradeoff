@@ -1,6 +1,7 @@
 
 # Tradeoff Functions
-
+# Tradeoff between fecundity and adult survival.
+# 
 # ---------------------------------------------------
 # Generate juvenile survival from maturity rate given a certain tradeoff
 sJ.from.m <- function(m, a, b) {
@@ -10,7 +11,7 @@ sJ.from.m <- function(m, a, b) {
 # ---------------------------------------------------
 # Generate juvenile survival from maturity rate given a certain tradeoff
 fec.from.sA <- function(sA, a, b) {
-    return(a + b * sA)
+    return(2 + (a + b * (sA*2)))
 }
 
 # ---------------------------------------------------
