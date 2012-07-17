@@ -42,7 +42,7 @@ process_mstar_juvshape <- function(x) {
 			return(data.frame(a= NA, b= NA, sA= NA, Fec = NA, juvshape = NA, corr = NA,  mstar = "Nan", amax_y = "Nan", sim_id = x$params$sim_id, type = "juvshape", cv = NA))
 		}
 	}
-# ------------------------------
+# ------------------------------cleaning up juvshape.
 
 remove_bad <- function(all) {
 keep <- apply(all, 1, function(x) !any("Nan" %in% x))
@@ -52,7 +52,8 @@ return(cleaned_all)
 
 juvshape_max <- ldply(t1_juvshape, process_mstar_juvshape, .progress = 'text')
 juvshape_max <- remove_bad(juvshape_max)
-# ------------------------------
+
+# ------------------------------working through the mstar of corr.
 process_mstar_cv <- function(x) {
 		if(class(x$data)=="data.frame") {
 		# message(sprintf("%s",x$params$sim_id))
@@ -88,24 +89,23 @@ save(cleaned_all, file="all_results_new.rda")
 
 
 
-
+# Saving individual results in separate data tables
 working_corr <- data.table(ldply(t1_corr1, function(x) data.frame(x[[2]]), .progress = 'text'))
-
 working_js <- data.table(ldply(t1_juvshape, function(x) data.frame(x[[2]]), .progress = 'text'))
-
-
 working_vd <- data.table(ldply(t1_vd, function(x) data.frame(x[[2]]), .progress = 'text'))
-
 working_simple <- data.table(ldply(t1_simple, function(x) data.frame(x[[2]]), .progress = 'text'))
 
+# Setting keys to make them sortable.
 setkeyv(working_corr, "sim_id")
 setkeyv(working_js, "sim_id")
 setkeyv(working_vd, "sim_id")
 setkeyv(working_simple, "sim_id")
 
-
+# Saving the files to disk.
 save(working_vd, file="working_vd.rdata")
 save(working_corr, file="working_corr.rdata")
 save(working_js, file="working_js.rdata")
 save(working_simple, file="working_simple.rdata")
 
+# Next run generate_all_plots.R to visualize these results.
+# ------------------------------------------------------------------
