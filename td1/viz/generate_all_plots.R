@@ -10,10 +10,10 @@ source('plot_functions.R')
 ## @ knitr load_tradeoff_results
 load('all_results_new.rda')
 
-load('../results/t1_simple_2012-06-15_12_56_36.358.rdata')
-load('../results/t1_vd_2012-06-15_13_05_13.819.rdata')
-load('../results/t1_juv_2012-06-15_16_04_55.rdata')
-load('../results/t1_corr1_2012-06-15_16_15_50.rdata')
+load('../results/t1_simple_2012-07-12_14_47_11.085.rdata')
+load('../results/t1_vd_2012-07-12_18_11_55.rdata')
+load('../results/t1_juv_2012-07-12_18_15_44.rdata')
+load('../results/t1_corr1_2012-07-12_18_15_52.rdata')
 
 # The collapsed parmas to locate the plots
 load("working_simple.rdata")
@@ -23,8 +23,10 @@ load('working_js.rdata')
 t1_corr <- t1_corr1
 split_data <- dlply(cleaned_all, .(a,b,sA))
 
-
-ggplot(split_data[[30]], aes(cv, mstar, colour = type)) + geom_point(size=3.2) + facet_wrap(~corr) + scale_colour_brewer("type",palette="Set1")
+temp <- split_data[[30]]
+temp$mstar <- as.numeric(temp$mstar)
+temp$mstar <- round(temp$mstar, digits = 3)
+ggplot(temp, aes(cv, mstar, colour = type)) + geom_point(size=3.2) + facet_wrap(~corr) + scale_colour_brewer("type",palette="Set2")
 ggsave('pdfs/td30.pdf')
 
 ggplot(split_data[[31]], aes(cv, mstar, colour = type)) + geom_point(size=3.2) + facet_wrap(~corr) + scale_colour_brewer("type",palette="Set1")
