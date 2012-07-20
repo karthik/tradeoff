@@ -2,7 +2,8 @@
 message("Generating various tradeoff combinations \n")
 # Basic tradeoff, adult survival, and fecundity
 a <-  seq(12, 6, by = -1)
-b <-  seq(-12, -6, by = 1)
+b <-  seq(6, 12, by = 1)
+b <- -1*b
 sJ <- seq(0.4, 0.9, by = 0.1)
 m <-  0.3 # fix juvenile maturation rate at some constant.
 basic_params <- param_combs(a, b, sJ, m)
@@ -10,18 +11,18 @@ basic_params <- param_combs(a, b, sJ, m)
 
 message("\n juvparams")
 # Next, add in a range of cv values
-# cv is defined as 1/sqrt(juvshape)
+# cv is defined as 1/sqrt(adshape)
 
-jps <- function(x) return((1/x)*(1/x))
-juvshape <- jps(seq(0.1, 1, by = 0.1))
-vd_params <- param_combs_jg(a, b, sJ, m, juvshape)
+ads <- function(x) return((1/x)*(1/x))
+adshape <- ads(seq(0.1, 1, by = 0.1))
+vd_params <- param_combs_jg(a, b, sJ, m, adshape)
 # length vd_params: 36040
 
 message("\n Finally, corr_params")
 # Now add in a correlation
 # corr <- c(0.1, 0.25, 0.5, 0.75, .99)
 corr <- seq(0.1, 0.9, by = 0.1)
-corr_params <- param_combs_corr(a, b, sJ, m, juvshape, corr)
+corr_params <- param_combs_corr(a, b, sJ, m, adshape, corr)
 
 # Resulting combinations =  40, 400, 5760
 

@@ -1,3 +1,5 @@
+
+
 generate_plots <- function(plot_item) {
 	ptitle <- sprintf("(%s,%s), sA=%s, F=2",unique(plot_item$a), unique(plot_item$b), unique(plot_item$sA))
 	ggplot(plot_item, aes(cv, mstar, colour= as.character(corr))) + facet_grid(~corr)   + geom_point(size =5 ,alpha=1/2, aes(shape=type)) + opts(title=ptitle)
