@@ -1,6 +1,6 @@
-setwd('~/Github/postdoc/tradeoff/td1/analysis')
-source('initialize.R')
-source('tfunctions.R')
+setwd('~/Github/postdoc/tradeoff/td3/analysis')
+source('initialize3.R')
+source('tfunctions3.R')
 library(data.table)
 
 a <- .9
@@ -30,10 +30,10 @@ t1_vd <- llply(basic_params, do_vd_tradeoff, .progress = 'text')
 t1_juvshape <- llply(vd_params, do_vd_tradeoff, .progress = 'text')
 # t1_corr <- llply(corr_params, do_vd_tradeoff, .progress = 'text')
 
-save(t1_simple, file = "small_t1_simple.rda")
-save(t1_vd, file =  "small_t1_vd.rda")
-save(t1_juvshape, file =  "small_t1_juvshape.rda")
-# save(t1_corr, file =  "small_t1_corr.rda")
+save(t1_simple, file = "small_t1_simple3.rda")
+save(t1_vd, file =  "small_t1_vd3.rda")
+save(t1_juvshape, file =  "small_t1_juvshape3.rda")
+# save(t1_corr, file =  "small_t1_corr3.rda")
 
 # load('small_t1_juvshape.rda')
 # load('small_t1_simple.rda')

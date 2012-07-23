@@ -16,8 +16,8 @@ fec.from.sA <- function(sA, a, b) {
 
 # ---------------------------------------------------
 # Generate juvenile survival from maturity rate given a certain tradeoff
-fec.from.m <- function(m, a, b) {
-    return(2 + (a + b * (m*2)))
+m.from.fec <- function(Fec, a, b) {
+    return(a + b*(Fec/100))
 }
 
 # ---------------------------------------------------

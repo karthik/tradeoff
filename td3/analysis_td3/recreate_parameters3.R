@@ -4,7 +4,7 @@ message("Generating various tradeoff combinations \n")
 a <- seq(0.9, 0.6, by = -0.1)
 b <- seq(-0.9, -0.6, by = 0.1)
 sA <- seq(0.6, 0.9, by = 0.1)
-Fec <- 2
+Fec <- 1:100
 basic_params <- param_combs(a, b, sA, Fec)
 # length basic_params = 40
 
@@ -36,9 +36,9 @@ corr_params <- param_combs_corr(a, b, sA, Fec, juvshape, corr)
 # Resulting combinations = 40, 400, 3600
 
 message ("Now saving the params to disk \n")
-save(basic_params, file="basic_params.rda")
-save(vd_params, file="vd_params.rda")
-save(corr_params, file="corr_params.rda")
+save(basic_params, file="basic_params3.rda")
+save(vd_params, file="vd_params3.rda")
+save(corr_params, file="corr_params3.rda")
 paths=('.')
 library(tools)
 checkRdaFiles(paths)

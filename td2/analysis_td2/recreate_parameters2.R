@@ -27,9 +27,9 @@ corr_params <- param_combs_corr(a, b, sJ, m, adshape, corr)
 # Resulting combinations =  40, 400, 5760
 
 message ("Now saving the params to disk \n")
-save(basic_params, file="basic_params.rda")
-save(vd_params, file="vd_params.rda")
-save(corr_params, file="corr_params.rda")
+save(basic_params, file="basic_params2.rda")
+save(vd_params, file="vd_params2.rda")
+save(corr_params, file="corr_params2.rda")
 paths=('.')
 library(tools)
 checkRdaFiles(paths)

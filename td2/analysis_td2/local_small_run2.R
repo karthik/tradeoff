@@ -25,14 +25,14 @@ vd_params <- param_combs_jg(a, b, sA, Fec, juvshape)
 # # length corr_params:
 
 
-t1_simple <- llply(basic_params, do_tradeoff, .progress = 'text')
-t1_vd <- llply(basic_params, do_vd_tradeoff, .progress = 'text')
-t1_juvshape <- llply(vd_params, do_vd_tradeoff, .progress = 'text')
-# t1_corr <- llply(corr_params, do_vd_tradeoff, .progress = 'text')
+t2_simple <- llply(basic_params, do_tradeoff, .progress = 'text')
+t2_vd <- llply(basic_params, do_vd_tradeoff, .progress = 'text')
+t2_juvshape <- llply(vd_params, do_vd_tradeoff, .progress = 'text')
+# t2_corr <- llply(corr_params, do_vd_tradeoff, .progress = 'text')
 
-save(t1_simple, file = "small_t1_simple.rda")
-save(t1_vd, file =  "small_t1_vd.rda")
-save(t1_juvshape, file =  "small_t1_juvshape.rda")
+save(t2_simple, file = "small_t2_simple.rda")
+save(t2_vd, file =  "small_t2_vd.rda")
+save(t2_juvshape, file =  "small_t2_juvshape.rda")
 # save(t1_corr, file =  "small_t1_corr.rda")
 
 # load('small_t1_juvshape.rda')
