@@ -3,14 +3,15 @@
 
 # ---------------------------------------------------
 # Generate juvenile survival from maturity rate given a certain tradeoff
-fec.from.sA <- function(a =a, b=b, sA=sA) {
-    return(a + b * (sA))
+fec.from.sA <- function(a =a, b=b, sA=sA) {  
+    Fec <- a + b*sA
+    return (100*Fec)
 }
 
 # ---------------------------------------------------
 # Calculate lamba from a basic matrix model
-dem.model <- function(m, sJ, sA, Fec) {
-    message(sprintf("\n %s, %s, %s, %s", m, sJ,sA, Fec))
+dem.model <- function(m, sJ, Fec, sA) {
+    # message(sprintf("\n %s, %s, %s, %s", m, sJ,Fec, sA))
     mat <- matrix(c((1 - m) * sJ, m * sJ, Fec, sA), nrow = 2)
     return(max(eigen(mat)$values))
 }
@@ -19,10 +20,10 @@ dem.model <- function(m, sJ, sA, Fec) {
  # Imposing the tradeoff for a simple matrix case
 tradeoff <- function(a, b, sJ, m, sA = NULL) {
     if (is.null(sA))
-    sA <- seq(0.1, 0.9, length = 20)
+    sA <- seq(0.01, 0.9, length = 40)
     Fec <- fec.from.sA( a = a, b = b, sA = sA)
     df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec))
-    lambda <- apply(df, 1, function(x) dem.model(x[1], x[2], x[3], x[4]))
+    lambda <- apply(df, 1, function(x) dem.model(x[1], x[2], x[4], x[3]))
     type <- "simple"
     return((data.frame(sA, Fec, lambda, cv = 1, type)))
 }
@@ -59,9 +60,12 @@ run_vdm_jg <- function(m, sJ, sA, Fec, juvshape) {
     # we need the scale parameter. mean = shape * scale. sd = sqrt(shape) * scale. see ?dgamma.  so:
 
     juvscale <- meanjuv/juvshape
-    vdmodel <- (VD.model(2, marginal.durations = list(VD.dist("gamma",
-        list(shape = juvshape, scale = juvscale)), VD.dist("geomp1", list(prob = (1 -
-        sA)))), marginal.death.times = list(VD.dist("geomp1", list(prob = (1 - sJ))),
+    # vdmodel <- (VD.model(2, marginal.durations = list(VD.dist("gamma",
+    #     list(shape = juvshape, scale = juvscale)), VD.dist("geomp1", list(prob = (1 -
+    #     sA)))), marginal.death.times = list(VD.dist("geomp1", list(prob = (1 - sJ))),
+    #     VD.dist("infinite")), fecundity = Fec))   
+    vdmodel <- (VD.model(2, marginal.durations = list(VD.dist("geomp1",
+        list(prob = m)),VD.dist("gamma", list(shape = juvshape, scale = juvscale)), marginal.death.times = list(VD.dist("geomp1", list(prob = (1 - sJ))),
         VD.dist("infinite")), fecundity = Fec))
     VDS <- VD.run(vdmodel)
     dev.table <- compile.dev.table(VDS)
@@ -82,8 +86,8 @@ run_vdm_corr <- function(m, sJ, sA, Fec, juvshape, corr) {
     # we need the scale parameter. mean = shape * scale.
     # sd = sqrt(shape) * scale. see ?dgamma.  so:
     juvscale <- meanjuv/juvshape
-    vdmodel <- suppressMessages(VD.model(2, marginal.durations = list(VD.dist("gamma",
-        list(shape = juvshape, scale = juvscale)), VD.dist("geomp1", list(prob = (1 - sA)))), marginal.death.times = list(VD.dist("geomp1",
+    vdmodel <- suppressMessages(VD.model(2, marginal.durations = list(VD.dist("geomp1",
+        list(prob = m)),VD.dist("gamma", list(shape = juvshape, scale = juvscale)), marginal.death.times = list(VD.dist("geomp1",
         list(prob = (1 - sJ))), VD.dist("infinite")), gauss.cov = my.gauss.cov, fecundity = Fec))
     VDS <- VD.run(vdmodel)
     dev.table <- compile.dev.table(VDS)
