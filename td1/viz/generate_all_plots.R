@@ -25,32 +25,18 @@ rm(t1_corr1)
 split_data <- dlply(cleaned_all, .(a,b,sA))
 # One tradeoff
 # ----------------------------------
+
+
 vd1 <- subset(o_curves(1),type=="vd_tradeoff")
 js1 <- subset(j_curves(1), cv==1.0)
 js1 <- js1[1:20,]
 co1 <- subset(c_curves(1), cv==1.0)
 co1 <- co1[1:20,]
-# tradeoff_data <- rbind(subset(o_curves(1),type=="vd_tradeoff"), subset(j_curves(1), cv==1.0), subset(c_curves(1), cv==1.0))
 xx <- rbind(vd1, js1, co1)
+
+# Just the tradeoff line
 actual_tradeoff <- data.frame(x=c(0,abs(unique(xx$b))), y=c(abs(unique(xx$a)),0))
-tradeoff_scenario <- ggplot(actual_tradeoff, aes(x,y)) + geom_line(colour="#a1323a", size = 1) + xlab("Maturation Rate") + ylab("Juvenile Survival") + opts(panel.background= theme_blank()) + opts(axis.line=theme_segment())
-ggplot(xx, aes(m, lambda, colour=type)) + geom_point(size=3.5, shape=1) + xlab("Juvenile survival") + ylab("Lambda")
 
-# This contains 40 items
-# -------------------------------------------
-
-
-# For item #1 ------------------------------------
-# The tradeoff curve
-tradeoff_data <- rbind(subset(o_curves(1),type=="vd_tradeoff"), subset(j_curves(1), cv==1.0), subset(c_curves(1),cv==1.0))
-xx= subset(tradeoff_data, cv==1)
-# The tradeoff intercept and slope
-actual_tradeoff <- data.frame(x=c(0,abs(unique(xx$b))), y=c(abs(unique(xx$a)),0))
-tradeoff_scenario <- ggplot(actual_tradeoff, aes(x,y)) + geom_line(colour="#a1323a", size = 1) + xlab("Maturation Rate") + ylab("Juvenile Survival") + opts(panel.background= theme_blank()) + opts(axis.line=theme_segment())
-# ------------------------------------------------------
-# The tradeoff curve
-ggplot(xx[1:60,], aes(m, lambda, colour=type)) + geom_point(size=3.5, shape=1) + xlab("Juvenile survival") + ylab("Lambda")
-# ------------------------------------------------------
 temp <- split_data[[1]]
 temp$mstar <- as.numeric(temp$mstar)
 temp$mstar <- round(temp$mstar, digits = 3)
@@ -59,10 +45,27 @@ temp[which(is.na(temp$corr)),]$corr <- "No correlation"
 temp$corr <- as.ordered(temp$corr)
 high_correlation <- subset(temp, corr==0.6)
 no_correlation <- subset(temp, type!="corr")
-ggplot(high_correlation, aes(cv,mstar)) + geom_point(size=3.2, aes(shape = type))
-ggplot(no_correlation, aes(cv,mstar,colour = type)) + geom_point(size=3.2, aes(shape = type))
 
-ggplot(temp, aes(cv, mstar, colour = type)) + geom_point(size=3.2, aes(shape = type)) + facet_wrap(~corr) + scale_colour_brewer("type",palette="Set2")
+
+
+plot1 <- ggplot(actual_tradeoff, aes(x,y)) + geom_line(colour="#a1323a", size = 1) + xlab("Maturation Rate") + ylab("Juvenile Survival") + opts(panel.background= theme_blank()) + opts(axis.line=theme_segment())
+
+plot2 <- ggplot(xx, aes(m, lambda, colour=type)) + geom_point(size=3.5, shape=1) + xlab("Juvenile survival") + ylab("Lambda") + opts(panel.background= theme_blank()) + opts(axis.line=theme_segment())
+	
+
+plot3 <- ggplot(high_correlation, aes(cv,mstar)) + geom_point(size=3.2, aes(shape = type)) + opts(panel.background= theme_blank()) + opts(axis.line=theme_segment())
+	
+
+plot4 <- ggplot(no_correlation, aes(cv,mstar,colour = type)) + geom_point(size=3.2, aes(shape = type)) + opts(panel.background= theme_blank()) + opts(axis.line=theme_segment())
+	
+plot1
+ggsave(file="~/Desktop/plot1.eps")
+plot2
+ggsave(file="~/Desktop/plot2.eps")
+plot3
+ggsave(file="~/Desktop/plot3.eps")
+plot4
+ggsave(file="~/Desktop/plot4.eps")
 
 
 
