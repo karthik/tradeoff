@@ -20,7 +20,7 @@ dem.model <- function(m, sJ, Fec, sA) {
  # Imposing the tradeoff for a simple matrix case
 tradeoff <- function(a, b, sJ, m, sA = NULL) {
     if (is.null(sA))
-    sA <- seq(0.01, 0.9, length = 40)
+    sA <- seq(0.01, 0.99, length = 20)
     Fec <- fec.from.sA( a = a, b = b, sA = sA)
     df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec))
     lambda <- apply(df, 1, function(x) dem.model(x[1], x[2], x[4], x[3]))
@@ -51,21 +51,20 @@ run_vdm <- function(m, sJ, sA, Fec) {
 }  # end run_vdm
 # -----------------------------------------
 # Running the model by adding compexity that juvenile development follows a gamma. We vary the cv on a scale of 0 - 1.
-run_vdm_jg <- function(m, sJ, sA, Fec, juvshape) {
-
+run_vdm_jg <- function(m, sJ, sA, Fec, adshape) {
     lambdaJ <- -log(1 - m)
     # prob of not maturing for one time step is exp(-lambdaJ)
-    meanjuv <- 1/lambdaJ
+    meanad <- 1/lambdaJ
     # mean of the exponential
     # we need the scale parameter. mean = shape * scale. sd = sqrt(shape) * scale. see ?dgamma.  so:
 
-    juvscale <- meanjuv/juvshape
+    adshape <- meanad/adshape
     # vdmodel <- (VD.model(2, marginal.durations = list(VD.dist("gamma",
-    #     list(shape = juvshape, scale = juvscale)), VD.dist("geomp1", list(prob = (1 -
+    #     list(shape = adshape, scale = adshape)), VD.dist("geomp1", list(prob = (1 -
     #     sA)))), marginal.death.times = list(VD.dist("geomp1", list(prob = (1 - sJ))),
     #     VD.dist("infinite")), fecundity = Fec))   
     vdmodel <- (VD.model(2, marginal.durations = list(VD.dist("geomp1",
-        list(prob = m)),VD.dist("gamma", list(shape = juvshape, scale = juvscale)), marginal.death.times = list(VD.dist("geomp1", list(prob = (1 - sJ))),
+        list(prob = m)),VD.dist("gamma", list(shape = adshape, scale = adshape))), marginal.death.times = list(VD.dist("geomp1", list(prob = (1 - sJ))),
         VD.dist("infinite")), fecundity = Fec))
     VDS <- VD.run(vdmodel)
     dev.table <- compile.dev.table(VDS)
@@ -77,17 +76,17 @@ run_vdm_jg <- function(m, sJ, sA, Fec, juvshape) {
 
 # -----------------------------------------
 # Running the model with the added complexity of correlation
-run_vdm_corr <- function(m, sJ, sA, Fec, juvshape, corr) {
+run_vdm_corr <- function(m, sJ, sA, Fec, adshape, corr) {
     my.gauss.cov <- matrix(c(1, corr, corr, 1), nrow = 2)
     lambdaJ <- -log(1 - m)
     ## prob of not maturing for one time step is exp(-lambdaJ)
-    meanjuv <- 1/lambdaJ
+    meanad <- 1/lambdaJ
     ## mean of the exponential
     # we need the scale parameter. mean = shape * scale.
     # sd = sqrt(shape) * scale. see ?dgamma.  so:
-    juvscale <- meanjuv/juvshape
+    juvscale <- meanad/adshape
     vdmodel <- suppressMessages(VD.model(2, marginal.durations = list(VD.dist("geomp1",
-        list(prob = m)),VD.dist("gamma", list(shape = juvshape, scale = juvscale)), marginal.death.times = list(VD.dist("geomp1",
+        list(prob = m)),VD.dist("gamma", list(shape = adshape, scale = juvscale))), marginal.death.times = list(VD.dist("geomp1",
         list(prob = (1 - sJ))), VD.dist("infinite")), gauss.cov = my.gauss.cov, fecundity = Fec))
     VDS <- VD.run(vdmodel)
     dev.table <- compile.dev.table(VDS)
@@ -98,40 +97,38 @@ run_vdm_corr <- function(m, sJ, sA, Fec, juvshape, corr) {
 # ---------------------------------------------------
 
 
-vd_tradeoff_basic <- function(a, b, sA = NULL, m = NULL, corr = NULL, juvshape = NULL) {
-        sA <- seq(0.1, 0.9, length = 20)
-        Fec <- fec.from.sA(sA, a, b)
+vd_tradeoff_basic <- function(a, b, m = NULL, sJ = NULL, corr = NULL, adshape = NULL) {
+        sA <- seq(0.01, 0.99, length = 20)
+        Fec <- fec.from.sA(a, b, sA)
 
         df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec))
         lambda <- apply(df, 1, function(x) run_vdm(x[1], x[2], x[3], x[4]))
-        df <- data.frame(m, sJ, lambda, cv=1)
+        df <- data.frame(sA, Fec, lambda, cv=1)
         df$type <- "vd_tradeoff"
         return(df)
     }
 
 
-vd_tradeoff_jg <- function(a, b, sA = NULL, m = NULL, corr = NULL, juvshape = NULL) {
-    if (is.null(m))
-        sA <- seq(0.1, 0.9, length = 20)
-       Fec <- fec.from.sA(sA, a, b)
+vd_tradeoff_jg <- function(a, b,  m = NULL, sJ = NULL,  corr = NULL, adshape = NULL) {
+        sA <- seq(0.01, 0.99, length = 20)
+       Fec <- fec.from.sA(a, b, sA)
 
-        df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec, juvshape = juvshape))
+        df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec, adshape = adshape))
         lambda <- apply(df, 1, function(x) run_vdm_jg(x[1], x[2], x[3], x[4], x[5]))
-        cv <- 1/sqrt(juvshape)
-        df <- data.frame(m, sJ, lambda, cv)
-        df$type <- "juvshape"
+        cv <- 1/sqrt(adshape)
+        df <- data.frame(sA, Fec, lambda, cv)
+        df$type <- "adshape"
         return(df)
     }
 
 
-vd_tradeoff_corr <- function(a, b, m = NULL, sA = NULL, corr = NULL, juvshape = NULL) {
-    if (is.null(m))
-        sA <- seq(0.1, 0.9, length = 20)
-       Fec <- fec.from.sA(sA, a, b)
-        df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec, juvshape = juvshape, corr = corr))
+vd_tradeoff_corr <- function(a, b,  m = NULL, sJ = NULL,  corr = NULL, adshape = NULL) {
+     sA <- seq(0.01, 0.99, length = 20)
+       Fec <- fec.from.sA(a, b, sA)
+        df <- as.matrix(data.frame(m = m, sJ = sJ, sA = sA, Fec = Fec, adshape = adshape, corr = corr))
         lambda <- apply(df, 1, function(x) run_vdm_corr(x[1], x[2], x[3], x[4], x[5], x[6]))
-           cv <- 1/sqrt(juvshape)
-        df <- data.frame(m, sJ, lambda, cv)
+           cv <- 1/sqrt(adshape)
+        df <- data.frame(sA, Fec, lambda, cv)
         df$type <- "corr"
         return(df)
     }
@@ -143,22 +140,21 @@ vd_tradeoff_corr <- function(a, b, m = NULL, sA = NULL, corr = NULL, juvshape = 
 
 
 do_vd_tradeoff <- function(tlist) {
-    if (length(tlist) == 4) {
+    if (length(tlist) == 5) {
         message('running run_vdm()....\n')
-       vd_toff <- tryCatch(expr = evalWithTimeout(vd_tradeoff_basic(tlist$a, tlist$b, tlist$m, sA = NULL) , timeout = 25),
+       vd_toff <- tryCatch(expr = evalWithTimeout(vd_tradeoff_basic(tlist$a, tlist$b, tlist$m, tlist$sJ) , timeout = 25),
              TimeoutException = function(ex) "TimedOut")
 }
 
-    if (length(tlist) == 5) {
+    if (length(tlist) == 6) {
         message(sprintf('running run_vdm_jg: %s\n', tlist$sim_id))
-         vd_toff <- suppressWarnings(tryCatch(expr = evalWithTimeout(vd_tradeoff_jg(tlist$a, tlist$b, tlist$m, juvshape = tlist$juvshape,
-            sA = NULL) , timeout = 40),
+         vd_toff <- suppressWarnings(tryCatch(expr = evalWithTimeout(vd_tradeoff_jg(tlist$a, tlist$b, tlist$m, tlist$sJ, adshape = tlist$adshape) , timeout = 40),
              TimeoutException = function(ex) "TimedOut"))
         }
 
-    if (length(tlist) == 6) {
+    if (length(tlist) == 7) {
         message(sprintf('running run_vdm_corr: %s\n', tlist$sim_id))
-              vd_toff <- suppressWarnings(tryCatch(expr = evalWithTimeout(vd_tradeoff_corr(tlist$a, tlist$b, tlist$m, juvshape = tlist$juvshape, tlist$corr, sA = NULL) , timeout = 40),
+              vd_toff <- suppressWarnings(tryCatch(expr = evalWithTimeout(vd_tradeoff_corr(tlist$a, tlist$b, tlist$m, tlist$sJ, adshape = tlist$adshape, tlist$corr) , timeout = 40),
              TimeoutException = function(ex) "TimedOut"))
         }
 
@@ -168,8 +164,8 @@ do_vd_tradeoff <- function(tlist) {
 # =------------------------------------------
 # checks for tradeoff combinations that might result in unrealistic mortality rates.
 validity <- function(aa, bb) {
-    sA <- seq(0.1, 0.9, length = 20)
-    Fec <- fec.from.sA(sA, aa, bb)
+    sA <- seq(0.01, 0.99, length = 20)
+    Fec <- fec.from.sA( aa, bb, sA)
     if (min(Fec) < 0) {
         return(FALSE)
     } else {
@@ -201,33 +197,33 @@ param_combs <- function(a, b, sJ, m) {
 }
 
 
-param_combs_jg <- function(a, b, sJ, m, juvshape) {
+param_combs_jg <- function(a, b, sJ, m, adshape) {
     valid <- param_check(a, b)
     base <- data.frame(a = valid[[1]], b = valid[[2]])
-    others <- expand.grid(sJ = sJ, m = m, juvshape = juvshape)
-    parameters <- ddply(others, .(sJ, m, juvshape), function(x) data.frame(base$a, base$b,
-        sJ = rep(x$sJ, dim(base)[1]), m = rep(x$m, dim(base)[1]), juvshape = rep(x$juvshape,
+    others <- expand.grid(sJ = sJ, m = m, adshape = adshape)
+    parameters <- ddply(others, .(sJ, m, adshape), function(x) data.frame(base$a, base$b,
+        sJ = rep(x$sJ, dim(base)[1]), m = rep(x$m, dim(base)[1]), adshape = rep(x$adshape,
             dim(base)[1])))
     parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("JG", 1:dim(parameters)[1])
     params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sJ = parameters[,
-        3], m = parameters[, 4], juvshape = parameters[, 5], sim_id = parameters[,
+        3], m = parameters[, 4], adshape = parameters[, 5], sim_id = parameters[,
         6], SIMPLIFY = F)
     return(params)
 }
 
 
-param_combs_corr <- function(a, b, sJ, m, juvshape, corr) {
+param_combs_corr <- function(a, b, sJ, m, adshape, corr) {
     valid <- param_check(a, b)
     base <- data.frame(a = valid[[1]], b = valid[[2]])
-    others <- expand.grid(sJ = sJ, m = m, juvshape = juvshape, corr = corr)
-    parameters <- ddply(others, .(sJ, m, juvshape, corr), function(x) data.frame(base$a, base$b,
-        sJ = rep(x$sJ, dim(base)[1]), m = rep(x$m, dim(base)[1]), juvshape = rep(x$juvshape, dim(base)[1]), corr = rep(x$corr,
+    others <- expand.grid(sJ = sJ, m = m, adshape = adshape, corr = corr)
+    parameters <- ddply(others, .(sJ, m, adshape, corr), function(x) data.frame(base$a, base$b,
+        sJ = rep(x$sJ, dim(base)[1]), m = rep(x$m, dim(base)[1]), adshape = rep(x$adshape, dim(base)[1]), corr = rep(x$corr,
             dim(base)[1])))
     parameters <- parameters[!duplicated(parameters), ]
     parameters$sim_id <- paste0("CO", 1:dim(parameters)[1])
     params <- mapply(list, a = parameters[, 1], b = parameters[, 2], sJ = parameters[,
-        3], m = parameters[, 4], juvshape = parameters[,5], corr = parameters[, 6], sim_id = parameters[,
+        3], m = parameters[, 4], adshape = parameters[,5], corr = parameters[, 6], sim_id = parameters[,
         7], SIMPLIFY = F)
     return(params)
 }
@@ -274,8 +270,8 @@ assemble_plots <- function(dat) {
  s1 <- as.numeric(dat$sim_id)
  s2 <- as.numeric(dat$sim_juv)
  s3 <- as.numeric(dat$sim_cor)
- title  <- sprintf("a:%s, b:%s, sA:%s, Fec:%s, juvshape:%s, corr:%s",dat$a, dat$b, dat$sA, dat$Fec, dat$juvshape, dat$corr)
- plot_data <- rbind(t1_simple[[s1]]$data, t1_juvshape[[s2]]$data, t1_corr[[s3]]$data)
+ title  <- sprintf("a:%s, b:%s, sA:%s, Fec:%s, adshape:%s, corr:%s",dat$a, dat$b, dat$sA, dat$Fec, dat$adshape, dat$corr)
+ plot_data <- rbind(t1_simple[[s1]]$data, t1_adshape[[s2]]$data, t1_corr[[s3]]$data)
  tradeoff.plot(plot_data, title)
 }
 

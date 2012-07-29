@@ -1,6 +1,9 @@
 
 # Tradeoff Functions
-
+juvenile <- c(20, 0, 0, 0, 200, "FALSE")
+adult <- c(20, 0, 0, 0, 200, "FALSE")
+controlz <- data.frame(rbind(juvenile, adult))
+names(controlz) <- c("batch.size", "alive.target", "dead.target", "max.dead", "max.total", "ragged.save")
 # ---------------------------------------------------
 # Generate juvenile survival from maturity rate given a certain tradeoff
 sJ.from.m <- function(m, a, b) {
@@ -50,11 +53,11 @@ do_tradeoff <- function(tlist) {
 }
 
 # ---------------------------------------------------
-# Running a vd model but with no variation in juvenile development or correlation among stages. Results should be identical to a matrix model case (with a small amout of simulation error)
+# Running a vd model but with no variation in juvenile development or correlation among stages. Results should be identical to a matrix model case (with a small amount of simulation error)
 run_vdm <- function(m, sJ, sA, Fec) {
     vdmodel <- suppressMessages(VD.model(num.stages = 2, marginal.durations = list(VD.dist("geomp1",
         list(prob = m)), VD.dist("geomp1", list(prob = (1 - sA)))), marginal.death.times = list(VD.dist("geomp1",
-        list(prob = (1 - sJ))), VD.dist("infinite")), fecundity = Fec))
+        list(prob = (1 - sJ))), VD.dist("infinite")), fecundity = Fec, controls=data.frame(batch.size = 10000, alive.target = 20000, dead.target =  c(rep(10000, 1), 0), max.dead = 20000, max.total = 250000, ragged.save = TRUE)))
     VDS <- VD.run(vdmodel)
     dev.table <- compile.dev.table(VDS)
     mean.fec <- calc.average.surv.rep.by.age(dev.table, F = Fec)
@@ -75,7 +78,7 @@ run_vdm_jg <- function(m, sJ, sA, Fec, juvshape) {
     vdmodel <- (VD.model(2, marginal.durations = list(VD.dist("gamma",
         list(shape = juvshape, scale = juvscale)), VD.dist("geomp1", list(prob = (1 -
         sA)))), marginal.death.times = list(VD.dist("geomp1", list(prob = (1 - sJ))),
-        VD.dist("infinite")), fecundity = Fec))
+        VD.dist("infinite")), fecundity = Fec, controls=data.frame(batch.size = 10000, alive.target = 20000, dead.target =  c(rep(10000, 1), 0), max.dead = 20000, max.total = 250000, ragged.save = TRUE)))
     VDS <- VD.run(vdmodel)
     dev.table <- compile.dev.table(VDS)
     mean.fec <- calc.average.surv.rep.by.age(dev.table, F = Fec)
@@ -97,7 +100,7 @@ run_vdm_corr <- function(m, sJ, sA, Fec, juvshape, corr) {
     juvscale <- meanjuv/juvshape
     vdmodel <- suppressMessages(VD.model(2, marginal.durations = list(VD.dist("gamma",
         list(shape = juvshape, scale = juvscale)), VD.dist("geomp1", list(prob = (1 - sA)))), marginal.death.times = list(VD.dist("geomp1",
-        list(prob = (1 - sJ))), VD.dist("infinite")), gauss.cov = my.gauss.cov, fecundity = Fec))
+        list(prob = (1 - sJ))), VD.dist("infinite")), gauss.cov = my.gauss.cov, fecundity = Fec, controls=data.frame(batch.size = 10000, alive.target = 20000, dead.target =  c(rep(10000, 1), 0), max.dead = 20000, max.total = 250000, ragged.save = TRUE)))
     VDS <- VD.run(vdmodel)
     dev.table <- compile.dev.table(VDS)
     mean.fec <- calc.average.surv.rep.by.age(dev.table, F = Fec)
@@ -156,21 +159,21 @@ vd_tradeoff_corr <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NU
 do_vd_tradeoff <- function(tlist) {
     if (length(tlist) == 5) {
         message('running run_vdm()....\n')
-       vd_toff <- tryCatch(expr = evalWithTimeout(vd_tradeoff_basic(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL) , timeout = 25),
+       vd_toff <- tryCatch(expr = evalWithTimeout(vd_tradeoff_basic(tlist$a, tlist$b, tlist$sA, tlist$Fec, m = NULL) , timeout = 80),
              TimeoutException = function(ex) "TimedOut")
 }
 
     if (length(tlist) == 6) {
         message(sprintf('running run_vdm_jg: %s\n', tlist$sim_id))
          vd_toff <- suppressWarnings(tryCatch(expr = evalWithTimeout(vd_tradeoff_jg(tlist$a, tlist$b, tlist$sA, tlist$Fec, juvshape = tlist$juvshape,
-            m = NULL) , timeout = 40),
+            m = NULL) , timeout = 80),
              TimeoutException = function(ex) "TimedOut"))
         }
 
     if (length(tlist) == 7) {
         message(sprintf('running run_vdm_corr: %s\n', tlist$sim_id))
               vd_toff <- suppressWarnings(tryCatch(expr = evalWithTimeout(vd_tradeoff_corr(tlist$a, tlist$b, tlist$sA, tlist$Fec, juvshape = tlist$juvshape,
-            tlist$corr, m = NULL) , timeout = 40),
+            tlist$corr, m = NULL) , timeout = 80),
              TimeoutException = function(ex) "TimedOut"))
         }
 

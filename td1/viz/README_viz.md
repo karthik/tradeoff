@@ -9,3 +9,9 @@ This will generate a set of 5 files:
 	 * `working_corr.rda`
 
 2. Next run `generate_all_plots.R` to plot these results. Required functions are sourced from `plot_functions.R`. The resulting PDF files are saved to the pdf folder. In the next iteration of this script you will have to save `.eps` files instead for publication quality figures.
+
+Color palette for visualization.
+Blue: #1a68a0
+Red: #a1323a
+Black: #455860
+Gold: #edb14a

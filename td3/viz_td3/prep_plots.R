@@ -1,37 +1,30 @@
 rm(list=ls())
 library(plyr)
 suppressPackageStartupMessages(library(data.table))
-setwd('~/Github/postdoc/tradeoff/td1/viz')
-source('../analysis/tfunctions.R')
-load('../results/t1_simple_2012-07-24_19_40_49.rdata')
-load('../results/t1_vd_2012-07-24_19_41_14.rdata')
-load('../results/t1_juv_2012-07-24_19_49_26.rdata')
-load('../results/t1_corr_2012-07-24_20_12_45.rdata')
+setwd('~/Github/postdoc/tradeoff/td3/viz_td3')
+source('../analysis_td3/tfunctions3.R')
+load('../results_td3/t3_vd_2012-07-23_21_57_44.rdata')
+load('../results_td3/t3_juv_2012-07-23_22_11_38.rdata')
+load('../results_td3/t3_corr_2012-07-23_23_15_08.rdata')
 
-
-
-
-
-# ------------------------------ SIMPLE
-simple_max <- ldply(t1_simple, function(x) {
-		amax <- arg_max(x$data)
-		return(data.frame(a=x$params$a, b=x$params$b, sA=x$params$sA, Fec = x$params$Fec, juvshape = NA, corr = NA, mstar = amax[[1]], amax_y = amax[[2]], sim_id = x$params$sim_id, type = "simple"))
-	}, .progress = 'text')
-simple_max$cv <- 1
-# ------------------------------ VD
-# VD
-vd_max <- ldply(t1_vd, function(x) {
-		amax <- arg_max(x$data)
-		return(data.frame(a=x$params$a, b=x$params$b, sA=x$params$sA, Fec = x$params$Fec, juvshape = NA, corr = NA, mstar = amax[[1]], amax_y = amax[[2]], sim_id = x$params$sim_id, type = "vd"))
-	}, .progress = 'text')
-vd_max$cv <- 1
-
-# ------------------------------ JUVSHAPE
 
 xx <- ldply(t1_juvshape, function(x) class(x[[1]]))
 keep <- which(xx$V1=="data.frame")
 t1_juvshape <- t1_juvshape[keep]
+t1_corr <- t1_corr1
 
+
+# ------------------------------ VD
+# VD
+
+t1_vd2 <- llply(t1_vd, function(x) if(!is.null(x$data))
+vd_max <- ldply(t1_vd, function(x) {
+		amax <- arg_max(x$data)
+		return(data.frame(a=x$params$a, b=x$params$b, sA=x$params$sA, juvshape = NA, corr = NA, mstar = amax[[1]], amax_y = amax[[2]], sim_id = x$params$sim_id, type = "vd"))
+	}, .progress = 'text')
+vd_max$cv <- 1
+
+# ------------------------------ JUVSHAPE
 
 process_mstar_juvshape <- function(x) {
 	if(!inherits(x, "try-error")) {
