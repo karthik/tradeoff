@@ -16,15 +16,14 @@ suppressPackageStartupMessages(library(R.utils))
 
 source("tfunctions.R")
 
-# ---- creating parameter combination functions ----
-
+# ---- creating parameter combination functions ----------
 #---------------------------------------------------------
 # Basic tradeoff, adult survival, and fecundity
 a <- seq(0.9, 0.6, by = -0.1)
 b <- seq(-0.9, -0.6, by = 0.1)
 sA <- seq(0.6, 0.9, by = 0.1)
 Fec <- 2
-basic_params <- param_combs(a, b, sA, Fec) #length = 40
+basic_params <- param_combs(a, b, sA, Fec) # length = 40
 #---------------------------------------------------------
 
 # Modeling juvenile survival as a gamma distribution
@@ -38,4 +37,5 @@ vd_params <- param_combs_jg(a, b, sA, Fec, juvshape) # length = 400
 # ------------------------------------------------------------
 corr <- seq(0.1, 0.9, by = 0.1)
 corr_params <- param_combs_corr(a, b, sA, Fec, juvshape, corr)
-# corr_params = 3600
+# length = 3600
+# ---- end param generation ----------------------------------
