@@ -70,13 +70,7 @@ process_mstar_cv <- function(x) {
 
 
 # ------------------------------
-# corr_data <- llply(t1_corr, function(x) class(x[1]))
-# corr_data <- ldply(corr_data)
-# index <-which(corr_data$V1=="character")
-# t1_corr2 <- t1_corr[-index]
-# t1_corr <- t1_corr2
-# save(t1_corr, file="cleaned_t1_corr.rdata")
-# Removing empty results from t1_corr
+
 message("Calculating arg max for t1_corr \n")
 x2 <- ldply(t2_corr, length)
 if(length(which(x2$V1==0))>0) {

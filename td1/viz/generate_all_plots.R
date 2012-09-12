@@ -49,7 +49,7 @@ s_data1 <- rbind(vd1, js1, co1)
 # ROW1 , PANEL 1
 # Just the tradeoff line
 actual_tradeoff <- data.frame(x=c(0,abs(unique(s_data1$b))), y=c(abs(unique(s_data1$a)),0))
-ggplot(actual_tradeoff, aes(x,y)) + geom_line(color="#a1323a", size=2.3) + opts(title="Tradeoff Scenario") + xlab("Juvenile growth rate") + ylab("Juvenile survival rate")
+ggplot(actual_tradeoff, aes(x,y)) + geom_line(color="#a1323a", size=2.3) + ggtitle("Tradeoff Scenario") + xlab("Juvenile growth rate") + ylab("Juvenile survival rate")
 
 # ROW1 , PANEL 2, 3, 4.
 ggplot(vd1, aes(m,lambda, colour=type)) + geom_point(size=3,shape=16) + xlab("Growth rate") + ylab("Lambda")
@@ -98,7 +98,7 @@ s_data1 <- rbind(vd1, js1, co1)
 # ROW1 , PANEL 1
 # Just the tradeoff line
 actual_tradeoff <- data.frame(x=c(0,abs(unique(s_data1$b))), y=c(abs(unique(s_data1$a)),0))
-ggplot(actual_tradeoff, aes(x,y)) + geom_line(color="#a1323a", size=2.3) + opts(title="Tradeoff Scenario") + xlab("Juvenile growth rate") + ylab("Juvenile survival rate")
+ggplot(actual_tradeoff, aes(x,y)) + geom_line(color="#a1323a", size=2.3) + ggtitle("Tradeoff Scenario") + xlab("Juvenile growth rate") + ylab("Juvenile survival rate")
 
 # ROW1 , PANEL 2, 3, 4.
 ggplot(vd1, aes(m,lambda, colour=type)) + geom_point(size=3,shape=16) + xlab("Growth rate") + ylab("Lambda")

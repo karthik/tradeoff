@@ -1,29 +1,43 @@
 
-# Tradeoff Functions
+# Tradeoff Functions 
+# 1. sJ.from.m - generates juvenile survival rates with a tradeoff based on maturation rates.
+# 2. dem.model - creates a matrix of values and solves for the eigenvalue (and returns the max eigenvalue).
+# 3. tradeoff  - Calculates a basic tradeoff based on a simple matrix case.
+# 4. do_tradeoff - a wrapper for tradeoff (prepares the data first), runs it through 3. and then compiles the results.
+# 5. run_vdm - 
+# 6. run_vdm_jg - 
+# 7. run_vdm_corr - 
+# 8. vd_tradeoff_basic - prepares data, calls run_vdm, and compiles results (with simulation ids)
+# 9. vd_tradeoff_jg - prepares data, calls run_vdm_jg, and compiles results (with simulation ids)
+# 10. vd_tradeoff_corr - prepares and calls run_vdm_corr and compiles results with parameter combinations (and simulation ids)
+# 11. do_vd_tradeoff - wrapper for functions 8-10. Which one is called depends in list length.
+# 12. validity - Check to make sure combinations do not result in biologically unrealisitc assumptions (e.g. negative mortality).
+# 13. param_check - Checks to make sure there are no duplicates in generated parameter combinations
+# 14. param_combs - Generates all combinations of parameters for basic tradeoff
+# 15. param_combs_jg - Generates all combinations of parameters for basic tradeoff but with added juvenile var
+# 16. param_combs_corr - Generates all combinations of parameters for basic tradeoff + juv var + correlation between stages.
+# 17. arg_max - calculates arg_max for any tradeoff curve by fitting a spline.
+# 18. tradeoff.plot - 
+# 19. do_tradeoff.plot - wrapper for tradeoff.plot
+# 20. assemble_plots - assembles all ggplots specified in argument list.
+# 21. generate_filename - Generates a filename by appending a timestamp
+
+
+# This is to increase the batch size for runs to lower simulation noise (I might ignore these and stick with a simpler version of the model)
 juvenile <- c(20, 0, 0, 0, 200, "FALSE")
 adult <- c(20, 0, 0, 0, 200, "FALSE")
 controlz <- data.frame(rbind(juvenile, adult))
 names(controlz) <- c("batch.size", "alive.target", "dead.target", "max.dead", "max.total", "ragged.save")
+
 # ---------------------------------------------------
-# Generate juvenile survival from maturity rate given a certain tradeoff
+# Generate juvenile survival from maturity rate given a certain tradeoff [works fine]
 sJ.from.m <- function(m, a, b) {
     return(a + b * m)
 }
 
 # ---------------------------------------------------
-# Generate juvenile survival from maturity rate given a certain tradeoff
-fec.from.sA <- function(sA, a, b) {
-    return(a + b * sA)
-}
-
-# ---------------------------------------------------
-# Generate juvenile survival from maturity rate given a certain tradeoff
-fec.from.m <- function(m, a, b) {
-    return(2 + (a + b * (m*2)))
-}
-
-# ---------------------------------------------------
 # Calculate lamba from a basic matrix model
+
 dem.model <- function(m, sJ, sA, Fec) {
     # message(sprintf("%s, %s, %s, %s", m, sJ,sA, Fec))
     mat <- matrix(c((1 - m) * sJ, m * sJ, Fec, sA), nrow = 2)
@@ -32,6 +46,7 @@ dem.model <- function(m, sJ, sA, Fec) {
 
  # ---------------------------------------------------
  # Imposing the tradeoff for a simple matrix case
+
 tradeoff <- function(a, b, sA, Fec, m = NULL) {
     if (is.null(m))
         m <- seq(0.01, 0.99, length = 20)
@@ -46,8 +61,11 @@ tradeoff <- function(a, b, sA, Fec, m = NULL) {
 
 # =------------------------------------------
 # Running a simple tradeoff.
+
 do_tradeoff <- function(tlist) {
+    # Run each combination in tlist through tradeoff and return only the results of valid runs
     toff <- tryCatch(tradeoff(tlist$a, tlist$b, tlist$Fec, tlist$sA, m = NULL), error=function(e) NULL)
+    # Write the results and the parameters used into a list.
     basic_result <- list(data = toff, params = tlist)
     return(basic_result)
 }
@@ -58,21 +76,24 @@ run_vdm <- function(m, sJ, sA, Fec) {
     vdmodel <- suppressMessages(VD.model(num.stages = 2, marginal.durations = list(VD.dist("geomp1",
         list(prob = m)), VD.dist("geomp1", list(prob = (1 - sA)))), marginal.death.times = list(VD.dist("geomp1",
         list(prob = (1 - sJ))), VD.dist("infinite")), fecundity = Fec, controls=data.frame(batch.size = 10000, alive.target = 20000, dead.target =  c(rep(10000, 1), 0), max.dead = 20000, max.total = 250000, ragged.save = TRUE)))
+    # run vardev model
     VDS <- VD.run(vdmodel)
+    # compile the results. See ?compile.dev.table for more information
     dev.table <- compile.dev.table(VDS)
     mean.fec <- calc.average.surv.rep.by.age(dev.table, F = Fec)
     r <- VD.solve.euler(mean.fec)
     return(exp(r))
 }  # end run_vdm
 # -----------------------------------------
-# Running the model by adding compexity that juvenile development follows a gamma. We vary the cv on a scale of 0 - 1.
+# Running the model by adding compexity that juvenile development follows a gamma. We vary the cv on a scale of 0 to 1.
 run_vdm_jg <- function(m, sJ, sA, Fec, juvshape) {
 
     lambdaJ <- -log(1 - m)
-    # prob of not maturing for one time step is exp(-lambdaJ)
+    # probability of not maturing for one time step is exp(-lambdaJ)
     meanjuv <- 1/lambdaJ
     # mean of the exponential
-    # we need the scale parameter. mean = shape * scale. sd = sqrt(shape) * scale. see ?dgamma.  so:
+    # we need the scale parameter. mean <- shape * scale. 
+    # sd <- sqrt(shape) * scale [see ?dgamma.]  so:
 
     juvscale <- meanjuv/juvshape
     vdmodel <- (VD.model(2, marginal.durations = list(VD.dist("gamma",
@@ -90,13 +111,14 @@ run_vdm_jg <- function(m, sJ, sA, Fec, juvshape) {
 # -----------------------------------------
 # Running the model with the added complexity of correlation
 run_vdm_corr <- function(m, sJ, sA, Fec, juvshape, corr) {
+
     my.gauss.cov <- matrix(c(1, corr, corr, 1), nrow = 2)
     lambdaJ <- -log(1 - m)
-    ## prob of not maturing for one time step is exp(-lambdaJ)
+    # prob of not maturing for one time step is exp(-lambdaJ)
     meanjuv <- 1/lambdaJ
     ## mean of the exponential
     # we need the scale parameter. mean = shape * scale.
-    # sd = sqrt(shape) * scale. see ?dgamma.  so:
+    # sd = sqrt(shape) * scale. [see ?dgamma.]  so:
     juvscale <- meanjuv/juvshape
     vdmodel <- suppressMessages(VD.model(2, marginal.durations = list(VD.dist("gamma",
         list(shape = juvshape, scale = juvscale)), VD.dist("geomp1", list(prob = (1 - sA)))), marginal.death.times = list(VD.dist("geomp1",
@@ -109,7 +131,7 @@ run_vdm_corr <- function(m, sJ, sA, Fec, juvshape, corr) {
 }  # end run_vdm_corr
 # ---------------------------------------------------
 
-
+# Function is a wrapper for do_tradeoff
 vd_tradeoff_basic <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL) {
     if (is.null(m))
         m <- seq(0.01, 0.99, length = 20)
@@ -122,7 +144,7 @@ vd_tradeoff_basic <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = N
         return(df)
     }
 
-
+# Function is a wrapper for run_vdm_jg
 vd_tradeoff_jg <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL) {
     if (is.null(m))
         m <- seq(0.01, 0.99, length = 20)
@@ -136,7 +158,7 @@ vd_tradeoff_jg <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL
         return(df)
     }
 
-
+# Function is a wrapper for run_vdm_corr
 vd_tradeoff_corr <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NULL) {
     if (is.null(m))
         m <- seq(0.01, 0.99, length = 20)
@@ -153,7 +175,7 @@ vd_tradeoff_corr <- function(a, b, sA, Fec, m = NULL, corr = NULL, juvshape = NU
 
 
 # =------------------------------------------
-# The wrapper for the above 3 functions. The right function to call is determined by the number and type of arguments.
+# The wrapper for the above 3 functions above (vd_tradeoff_basic, vd_tradeoff_jg, vd_tradeoff_corr). The right function to call is determined by the number and type of arguments.
 
 
 do_vd_tradeoff <- function(tlist) {
@@ -266,7 +288,7 @@ tradeoff.plot <- function(data, ptitle = "") {
     base_colours <- c("#8a0033", "#68bac2", "#006d44")
     colours <- base_colours[1:length(unique(data$type))]
     tplot <- ggplot(data, aes(m, lambda, colour = type)) + geom_point(size = 2.8,
-        shape = 16) + opts(title = ptitle) + scale_color_manual(values = colours)
+        shape = 16) + ggtitle(ptitle) + scale_color_manual(values = colours)
     return(tplot)
 }
 

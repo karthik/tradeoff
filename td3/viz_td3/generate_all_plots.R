@@ -3,8 +3,8 @@ rm(list=ls())
 library(ggplot2)
 library(gridExtra)
 suppressPackageStartupMessages(library(data.table))
-setwd('~/Github/postdoc/tradeoff/td1/viz')
-source('../analysis/tfunctions.R')
+setwd('~/Github/postdoc/tradeoff/td3/viz_td3')
+source('../analysis_td3/tfunctions3.R')
 source('plot_functions.R')
 
 # A collated data.frame with results from simple, vd, juvshape, and corr.
@@ -16,12 +16,12 @@ load('working_corr.rdata')
 load('working_js.rdata')
 
 # Raw results
-load('../results_td3/t3_vd_2012-07-23_21_57_44.rdata')
-load('../results_td3/t3_juv_2012-07-23_22_11_38.rdata')
-load('../results_td3/t3_corr_2012-07-23_23_15_08.rdata')
+load('../results_td3/t3_corr_2012-09-11_21_47_16.rdata')
+load('../results_td3/t3_juvshape_2012-09-11_20_59_54.rdata')
+load('../results_td3/t3_simple_2012-09-11_20_46_54.rdata')
+load('../results_td3/t3_vd_2012-09-11_20_47_25.rdata')
 
-t1_corr <- t1_corr1
-rm(t1_corr1)
+# turn the outcome into a data.frame so I can quickly find and match results across the different cases
 split_data <- dlply(cleaned_all, .(a,b,sA))
 # One tradeoff
 # ----------------------------------
@@ -48,15 +48,15 @@ no_correlation <- subset(temp, type!="corr")
 
 
 
-plot1 <- ggplot(actual_tradeoff, aes(x,y)) + geom_line(colour="#a1323a", size = 1) + xlab("Maturation Rate") + ylab("Juvenile Survival") + opts(panel.background= theme_blank()) + opts(axis.line=theme_segment())
+plot1 <- ggplot(actual_tradeoff, aes(x,y)) + geom_line(colour="#a1323a", size = 1) + xlab("Maturation Rate") + ylab("Juvenile Survival") + theme(panel.background= theme_blank()) + theme(axis.line=theme_segment())
 
-plot2 <- ggplot(xx, aes(m, lambda, colour=type)) + geom_point(size=3.5, shape=1) + xlab("Juvenile survival") + ylab("Lambda") + opts(panel.background= theme_blank()) + opts(axis.line=theme_segment())
+plot2 <- ggplot(xx, aes(m, lambda, colour=type)) + geom_point(size=3.5, shape=1) + xlab("Juvenile survival") + ylab("Lambda") + theme(panel.background= theme_blank()) + theme(axis.line=theme_segment())
 	
 
-plot3 <- ggplot(high_correlation, aes(cv,mstar)) + geom_point(size=3.2, aes(shape = type)) + opts(panel.background= theme_blank()) + opts(axis.line=theme_segment())
+plot3 <- ggplot(high_correlation, aes(cv,mstar)) + geom_point(size=3.2, aes(shape = type)) + theme(panel.background= theme_blank()) + theme(axis.line=theme_segment())
 	
 
-plot4 <- ggplot(no_correlation, aes(cv,mstar,colour = type)) + geom_point(size=3.2, aes(shape = type)) + opts(panel.background= theme_blank()) + opts(axis.line=theme_segment())
+plot4 <- ggplot(no_correlation, aes(cv,mstar,colour = type)) + geom_point(size=3.2, aes(shape = type)) + theme(panel.background= theme_blank()) + theme(axis.line=theme_segment())
 	
 plot1
 ggsave(file="~/Desktop/plot1.eps")

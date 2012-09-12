@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="13">
+            <Title>Literature Cited</Title>
+            <Text>Papers to Cite
+
+</Text>
+        </Document>
+        <Document ID="3">
+            <Title>Front matter</Title>
+            <Text>Title: Realistic assumptions alter outcomes of classic life-history tradeoffs
+
+Karthik Ram *
+Perry de Valpine
+
+Department of Environmental Science, Policy, and Management. University of California, Berkeley. Berkeley, CA 94720.
+
+* - Author for correspondence
+Karthik.ram@gmail.com, karthik.ram@berkeley.edu
+
+</Text>
+        </Document>
+        <Document ID="7">
+            <Title>Adult survival x Fecundity</Title>
+        </Document>
+        <Document ID="8">
+            <Title>Juvenile survival x Fecundity</Title>
+        </Document>
+        <Document ID="4">
+            <Title>Introduction</Title>
+            <Text>Classic life-history theory predicts that organisms experience tradeoffs in traits such as juveline growth and survival, adult survival and fecundity, and juveline survival and fecundity. Predictions from simple density-independent demographic models suggest that these tradeoffs result in an optimim where growth rate is maximum.
+Ecologists, however, have been aware for well over fifty years that this suite of models are overly simplistic. For example, in a simple matrix model, there is a single flow rate between life-history stages although it is widely acknolwdged that there is variation in development time among individuals within any given stage. Explicitly modeling individual variation can result in the model becoming far too complex, likely accomplished through the use of delay difference equations. </Text>
+        </Document>
+        <Document ID="11">
+            <Title>Discussion</Title>
+            <Text>Although ecologists have been well aware of the existence of individual heterogeneity, especially within groups of seemingly identical individuals, such grouping can still do a poor job of capturing the inherent variation. In this paper we demonstrate how the consideration of individual variation in classic life-history tradeoffs can result in dramatically different outcomes of trade-offs.</Text>
+        </Document>
+        <Document ID="14">
+            <Title>Cover Letter AmNat</Title>
+            <Text>										September 10th, 2012.
+Editor in chief
+The American Naturalist
+
+Dear EIC,
+Please consider our manuscript titled “Variation in cohort development time and correlation among life history stages alter outcome of classic ecological tradeoffs”.  Ecologists have long been aware that variation among individuals in a cohort can impact the dynamics of stage structured models yet choose unrealistic assumptions for the sake of tractability. While there are many approaches to incorporate more realism into stage structured models, ranging from x to y (which is all but impossible for the average ecologist), we demonstrate that using Perry’s old paper and associated techniques, that a) it is possible to incorporate variation in development time and that b) when considering some of the most classic tradeoffs in ecology, we show that adding varying levels of complexity alters the optimal tradeoff. These results also have implications for important questions related to the evolution of semelpartity.
+
+We suggest x, y, and z as potential reviewers of this work. This paper was submitted to the arXiv pre-print server and we have incorporated the pre-publication review received thus far into our manuscript. 
+
+Please do not hesitate to contact us with further questions.
+
+Sincerely,
+Karthik Ram and Perry de Valpine.
+</Text>
+        </Document>
+        <Document ID="5">
+            <Title>Tradeoffs</Title>
+        </Document>
+        <Document ID="12">
+            <Title>Acknowledgements</Title>
+            <Text>Acknowledgements
+We would like to thank x1, x2, and x3 for constructive comments on earlier drafts of this manuscript. This work was supported by a National Science Foundation grant (DEB #XXXXXX) to P. De Valpine and N. Mills. All of the code needed to replicate this work are avaliable on the Dryad repository (DOI: xxxxxx).
+
+</Text>
+        </Document>
+        <Document ID="6">
+            <Title>Juvenile Growth x survival</Title>
+        </Document>
+        <Document ID="10">
+            <Title>Results</Title>
+            <Text>Results:
+We find that incorporating variation in juveline devleopment lowers the optimal growth rate for a tradeoff. Further, adding correlation among stages, on in the case of this exercise, between stages, lowered the arg max for tradeof. This suggest that incorporating some level of realism has a significant effects on the outcome of the tradeoff.
+
+In the case of the tradeoff between juveline survival and growth rate, for most parameter combinations, we were unable to obtain any tradeoff — I.e. Avoid the boundary condition altogether.  Thus, we eliminated cases where there was no tradeoff. 
+
+# Note on Reproducibility
+All of the code and instructions necessary to replicate the entire paper as seen here are available on a GitHub repository: https://github.com/karthikram/tradeoff/). This repository includes the full provenance of code development. The same zipped code will also be available at data dryad (http://dryad.org).
+</Text>
+        </Document>
+    </Documents>
+</SearchIndexes>
