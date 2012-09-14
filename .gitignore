@@ -10,3 +10,5 @@ td1/basic_params.rda
 td1/*.pbs
 resources/*
 misc/*
+manuscript/*.scriv
+*.scriv
