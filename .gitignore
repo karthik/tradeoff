@@ -1,13 +1,13 @@
 personal_notes/*
 *.rdata
 cluster_junk/
-td_monday.zip
 *.zip
-td1/basic_params.rda
 *.rda
 *.pdf
 *.pbs
 td1/*.pbs
 original_example.R
+resources/*
 misc/*
+manuscript/*.scriv
 *.scriv

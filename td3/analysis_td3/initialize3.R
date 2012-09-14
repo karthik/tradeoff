@@ -14,6 +14,7 @@ suppressPackageStartupMessages(library(data.table))
 suppressPackageStartupMessages(library(R.utils))
 message("Loading functions \n")
 source("tfunctions3.R")
+load('working_sims.rdata')
 # ------------------------------------------------------
 #  This is for the tradeoff between juvenile growth and fecundity.
 # ------------------------------------------------------
@@ -25,7 +26,17 @@ b <- seq(-0.9, -0.6, by = 0.1)
 sA <- seq(0.6, 0.9, by = 0.1)
 sJ <- seq(0.6, 0.9, by = 0.1)
 basic_params <- param_combs(a, b, sA, sJ)
-# 256
+# 25
+
+# Since not all combinations result in a tradeoff, we remove ones that dont to avoid computation overhead
+basic_params2 <- lapply(basic_params, function(x) {
+	 load('working_sims.rdata')
+ 	 if(x$sim_id %in% working_sims$sim_id) {
+ 	   return(x) 
+ 	   }
+	})
+
+basic_params <- compact(basic_params2)
 
 # ------------------------------------------------------
 message("\n juvparams")

@@ -1,6 +1,6 @@
 
 # Tradeoff Functions
-
+# Notes: Fecundity makes a huge difference regardless of adult survival. i.e. larger fecundity trumps adult survival when it comes to lambda.
 # ---------------------------------------------------
 # Generate juvenile survival from maturity rate given a certain tradeoff
 fec.from.sA <- function(a =a, b=b, sA=sA) {  
@@ -232,7 +232,7 @@ param_combs_corr <- function(a, b, sJ, m, adshape, corr) {
 # ---------------------------------------
 # A simple spline to smooth simulated points and find the max.
 arg_max <- function(data) {
-    smoothed <- smooth.spline(data$m, data$lambda)
+    smoothed <- smooth.spline(data$sA, data$lambda)
     maxy <- max(smoothed$y)
     maxx <- smoothed$x[which(smoothed$y == maxy)]
     return(list(maxx, maxy))

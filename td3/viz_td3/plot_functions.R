@@ -11,8 +11,8 @@ j_curves <- function(id) {
 	dt <- split_data[[id]]
 	ids <- working_js[sim_id %in% dt[type=="juvshape",]$sim_id,which=T]
 	dataa <- ldply(as.list(ids), function(x) {
-		if(is.data.frame(t1_juvshape[[x]]$data))
-		return(t1_juvshape[[x]]$data) })
+		if(is.data.frame(t3_juvshape[[x]]$data))
+		return(t3_juvshape[[x]]$data) })
 	dataa$a <- unique(dt$a)
 	dataa$b <- unique(dt$b)
 	dataa$sA <- unique(dt$sA)
@@ -26,8 +26,8 @@ c_curves <- function(id) {
 	dt <- split_data[[id]]
 	ids <- working_corr[sim_id %in% dt[type=="corr",]$sim_id,which=T]
 	dataa <- ldply(as.list(ids), function(x) {
-		if(is.data.frame(t1_corr[[x]]$data))
-		return(t1_corr[[x]]$data) })
+		if(is.data.frame(t3_corr[[x]]$data))
+		return(t3_corr[[x]]$data) })
 	dataa$a <- unique(dt$a)
 	dataa$b <- unique(dt$b)
 	dataa$sA <- unique(dt$sA)
@@ -41,7 +41,9 @@ o_curves <- function(id) {
 	dt <- split_data[[id]]
 	id1 <- working_simple[sim_id %in% dt[type=="simple",]$sim_id,which=T]
 	id2 <- working_vd[sim_id %in% dt[type=="vd",]$sim_id,which=T]
-	dataa <- rbind(t1_vd[[id1]]$data, t1_simple[[id2]]$data)
+	id1 <- min(id1)
+	id2 <- min(id2)
+	dataa <- rbind(t3_vd[[id1]]$data, t3_simple[[id2]]$data)
 	dataa$a <- unique(dt$a)
 	dataa$b <- unique(dt$b)
 	dataa$sA <- unique(dt$sA)

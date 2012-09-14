@@ -1,21 +1,23 @@
 # Life-history tradeoff analysis
 
-## Summary:
+author: Karthik Ram, [karthik.ram@gmail.com](mailto:karthik.ram@gmail.com)
 
-## Results:
+This repository contains all the code for my paper on life history trade off analysis. I'll flesh this README more shortly but for the time being, here is the organizational set up:
 
-#### Exploring of tradeoff between maturation and juvenile survival.
+```
+td1 (growth rate versus juvenile survival)
+	|_analysis
+	|_results
+	|_viz (visualization)
 
-* [results (web friendly)](https://github.com/karthikram/tradeoff/blob/master/docs/plots.md)
-* [results (PDF)](https://github.com/karthikram/tradeoff/blob/master/docs/plots.pdf)
+td2 (adult survival versus fecundity)
+	|_analysis
+	|_results
+	|_viz (visualization)
 
-#### Exploring of tradeoff between fecundity and adult survival
-
-* [results (web friendly)]
-* [results (PDF)]
-
-#### Exploring of tradeoff between maturation and fecundity.
-
-* [results (web friendly)]
-* [results (PDF)]
-
+td1 (growth rate versus fecundity)
+	|_analysis
+	|_results
+	|_viz (visualization)
+```
+Each trade off folder has a more detailed README.

@@ -49,10 +49,17 @@ s_data1 <- rbind(vd1, js1, co1)
 # ROW1 , PANEL 1
 # Just the tradeoff line
 actual_tradeoff <- data.frame(x=c(0,abs(unique(s_data1$b))), y=c(abs(unique(s_data1$a)),0))
-ggplot(actual_tradeoff, aes(x,y)) + geom_line(color="#a1323a", size=2.3) + opts(title="Tradeoff Scenario") + xlab("Juvenile growth rate") + ylab("Juvenile survival rate")
+tradeoff_plot <- ggplot(actual_tradeoff, aes(x,y)) + geom_line(color="#edb14a", size=1.5, type=2) + ggtitle("Tradeoff Scenario") + xlab("Juvenile growth rate") + ylab("Juvenile survival rate") 
 
 # ROW1 , PANEL 2, 3, 4.
-ggplot(vd1, aes(m,lambda, colour=type)) + geom_point(size=3,shape=16) + xlab("Growth rate") + ylab("Lambda")
+panel1<- ggplot(vd1, aes(m,lambda, colour=type)) + geom_point(size=4,aes(shape=type)) + xlab("Growth rate") + ylab("Lambda") + scale_color_manual(values=c("#1a68a0","#a1323a"), guide= "none")+ geom_vline(xintercept= 0.3710526) + geom_vline(xintercept=0.3194737, linetype=2)
+
+Color palette for visualization.
+Blue: #1a68a0
+Red: #a1323a
+Black: #455860
+Gold: #edb14a
+
 ggplot(js1, aes(m,lambda, colour=cv)) + geom_point(size=3,shape=16) + xlab("Growth rate") + ylab("Lambda")
 ggplot(co1, aes(m,lambda, colour=cv)) + geom_point(size=3) + xlab("Growth rate") + ylab("Lambda")
 
@@ -68,7 +75,10 @@ s1$variation <- rep("variation", dim(s1)[1])
 s1[which(s1$cv==1), ]$variation <- "No variation"
 s1[which(s1$cv!=1), ]$variation <- "With variation"
 
-nc_plot <- ggplot(subset(s1, is.na(corr)), aes(cv,mstar, colour=variation))  + geom_point(size=4, aes(shape=cor_status), position = position_jitter(w = 0.001, h = 0.0))  + ylim(0.35,.7) +  scale_shape_manual(values=c(1,19))
+nc_plot <- 
+
+
+ggplot(subset(s1, s1$cor_status=="Correlation"), aes(cv,mstar))  + geom_point(size=4)  + ylim(0.35,.7) + facet_wrap(~corr)
 
 
 low_plot <- ggplot(subset(s1, corr==0.2) , aes(cv,mstar, colour=variation))  + geom_point(size=4, aes(shape=cor_status), position = position_jitter(w = 0.001, h = 0.0)) + ylim(0.35,.7) +  scale_shape_manual(values=c(1,19))
@@ -80,6 +90,33 @@ grid.arrange(nc_plot, low_plot, high_plot, nrow=1)
 
 # ----------------------------------
 # ---- end one tradeoff ------------
+
+
+# grid.newpage()
+pushViewport(viewport(layout = grid.layout(3, 5)))
+vplayout <- function(x, y) viewport(layout.pos.row = x, layout.pos.col = y) 
+print(tradeoff_plot, vp = vplayout(1:2, 1:2)) 
+print(panel1, vp = vplayout(1, 3)) 
+print(panel1, vp = vplayout(1, 4))
+print(panel1, vp = vplayout(1, 5))
+print(plota, vp = vplayout(2, 3)) 
+print(plota, vp = vplayout(2, 4))
+print(plota, vp = vplayout(2, 5))
+print(plota, vp = vplayout(3, 1))
+print(plota, vp = vplayout(3, 2))
+print(plota, vp = vplayout(3, 3))
+print(plota, vp = vplayout(3, 4))
+print(plota, vp = vplayout(3, 5))
+# dev.off()
+
+
+
+
+
+
+
+
+
 
 
 
@@ -98,7 +135,7 @@ s_data1 <- rbind(vd1, js1, co1)
 # ROW1 , PANEL 1
 # Just the tradeoff line
 actual_tradeoff <- data.frame(x=c(0,abs(unique(s_data1$b))), y=c(abs(unique(s_data1$a)),0))
-ggplot(actual_tradeoff, aes(x,y)) + geom_line(color="#a1323a", size=2.3) + opts(title="Tradeoff Scenario") + xlab("Juvenile growth rate") + ylab("Juvenile survival rate")
+ggplot(actual_tradeoff, aes(x,y)) + geom_line(color="#a1323a", size=2.3) + ggtitle("Tradeoff Scenario") + xlab("Juvenile growth rate") + ylab("Juvenile survival rate")
 
 # ROW1 , PANEL 2, 3, 4.
 ggplot(vd1, aes(m,lambda, colour=type)) + geom_point(size=3,shape=16) + xlab("Growth rate") + ylab("Lambda")

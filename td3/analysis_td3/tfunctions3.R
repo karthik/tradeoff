@@ -259,11 +259,11 @@ tradeoff.plot <- function(data, ptitle = "") {
     base_colours <- c("#8a0033", "#68bac2", "#006d44")
     colours <- base_colours[1:length(unique(data$type))]
     tplot <- ggplot(data, aes(m, lambda, colour = type)) + geom_point(size = 2.8,
-        shape = 16) + opts(title = ptitle) + scale_color_manual(values = colours)
+        shape = 16) + ggtitle(ptitle) + scale_color_manual(values = colours)
     return(tplot)
 }
 
-# This combines the plots.
+# This combines the plots
 do_tradeoff.plot <- function(p1, p2) {
     data <- rbind(p1$data, p2$data)
     params <- ldply(c(p1$params,p2$params), data.frame)

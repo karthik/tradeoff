@@ -1,6 +1,6 @@
 # Initialize basic libraries and functions
 rm(list = ls())
-setwd('~/Github/postdoc/tradeoff/td2/analysis_td2')
+# setwd('~/Github/postdoc/tradeoff/td2/analysis_td2')
 message("Loading libraries \n")
 library(plyr)
 library(varDev2)
@@ -22,7 +22,7 @@ m <-  seq(.2,.8,by=.2) # fix juvenile maturation rate at some constant.
 basic_params <- param_combs(a, b, sJ, m)
 # length basic_params = 112
 
-message("\n juvparams")
+message("\n adult survival")
 # Next, add in a range of cv values
 # cv is defined as 1/sqrt(adshape)
 
