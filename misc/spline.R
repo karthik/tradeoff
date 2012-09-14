@@ -15,3 +15,14 @@ max(smoothed$y)
 
 
 
+?smooth.construct in package mgcv
+
+## We will need a way to find the arg max (location of the maximum).
+## For the simulated models this is a little bit tricky because of
+## simulation noise.  I think an easy practical approach would be to
+## calculate lambda for a grid of values (as above), then fit a spline
+## to those and find the peak of the spline.  Actually I have some
+## code to do that for another project that I could dig up if we want
+## it.  Another option is to open up the simulation code so we use the
+## same underlying random quantiles every time (I can explain that
+## more).
