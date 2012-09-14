@@ -271,13 +271,6 @@ param_combs_corr <- function(a, b, sA, Fec, juvshape, corr) {
 
 # ---------------------------------------
 # A simple spline to smooth simulated points and find the max.
-old_arg_max <- function(data) {
-    smoothed <- smooth.spline(data$m, data$lambda)
-    maxy <- max(smoothed$y)
-    maxx <- smoothed$x[which(smoothed$y == maxy)]
-    return(list(maxx, maxy))
-}
-
 arg_max <- function(data) {
 m <- data$m
 lambda <- data$lambda
