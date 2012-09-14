@@ -1,9 +1,7 @@
 personal_notes/*
 *.rdata
 cluster_junk/
-td_monday.zip
 *.zip
-td1/basic_params.rda
 *.rda
 *.pdf
 *.pbs
