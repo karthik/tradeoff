@@ -10,3 +10,4 @@ td1/basic_params.rda
 td1/*.pbs
 original_example.R
 misc/*
+*.scriv
