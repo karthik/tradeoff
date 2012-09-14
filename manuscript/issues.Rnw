@@ -1,0 +1,61 @@
+\documentclass{article}
+\usepackage[sc]{mathpazo}
+\usepackage{geometry}
+\usepackage{graphicx}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\usepackage{url}
+\usepackage[unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=true,bookmarksopenlevel=2,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+\hypersetup{
+ pdfstartview={XYZ null null 1}}
+\usepackage{breakurl}
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE>>=
+# this is equivalent to \SweaveOpts{...}
+opts_chunk$set(fig.path='figure/minimal-', fig.align='center', fig.show='hold')
+options(replace.assign = TRUE, width = 90)
+@
+
+
+\title{Tradeoff analysis issues}
+
+
+\author{Karthik Ram}
+
+\maketitle
+
+A quick summary of the issues with my analysis thus far. Of the three trade offs we chose to evaluate, I am able to run trade off 1 and 3 (briefly described below) but cannot generate any trade off between adult survival and fecundity (trade off #2). I'm fine with leaving it out and just focusing on cleaning up the results from 1 and 3. Here are my last remaining issues. \\
+
+Trade-off 1 (juvenile growth vs survival):  For the simulations on a tradeoff between juvenile growth and survival, I am able to get consistent results, although not a smooth pattern with varying coefficient of variation. Since my code relies heavily on plyr, which I know you don't use, I've included your original script:
+
+\begin{verbatim}
+original_example.R with the following parameters:
+ intercept = 0.6
+ slope = -0.6
+ adult survival (sA) = .7
+ fecundity = 2.
+ \end{verbatim}
+
+\includegraphics[width=15cm,height=15cm]{td1_nsmooth.png} 
+
+Notice that optimal growth rate does not vary smoothly with cv. Each panel above indicates a different level of correlation.\\
+
+Trade-off 2 (adult survival vs. fecundity): Unless I set this up incorrectly (which I have checked several times), imposing a linear trade off between adult survival and fecundity always results in a boundary condition without any optimum. Table 1 is the trade of foutcome of one such run for a matrix case. \\
+
+<<baddata, results=asis, echo=FALSE>>=
+load('tradeoff3_bad.rdata')
+xtable::xtable( tradeoff3_bad, caption = "When imposing a linear tradeoff between adult survival and fecundity, the optimum is always a boundary condition for any scenario.")
+@
+ 
+Trade-off 3 (juveline growth and fecundity): Although I am able to generate a trade off for most parameter combinations, outside of a simple matrix case, the trade off curves contain a lot simulation noise (figure 2 following the table).
+
+\includegraphics[width=15cm,height=15cm]{t3.png} 
+
+ 
+
+\end{document}
