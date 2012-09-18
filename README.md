@@ -24,9 +24,12 @@ Each trade off folder has a more detailed README.
 
 ## Manuscript
 
-Current version of the manuscript is in the `manuscript/` folder. To update the `PDF` and `.docx` version to most current, run the following in pandoc:
+Current version of the manuscript is in the `manuscript/` folder. To update the `PDF` and `.docx` version to most current, run the following commands:
 
 ```
-pandoc -s -S --bibliography tradeoff.bib tradeoffms.md - o ms.pdf
-pandoc -s -S --bibliography tradeoff.bib tradeoffms.md - o ms.docx
+# To generate a PDF
+pandoc -s -S --bibliography tradeoff.bib --mathjax --csl the-american-naturalist.csl tradeoffms.md -o test.pdf
+# To generate a word document.
+pandoc -s -S --bibliography tradeoff.bib --mathjax --csl the-american-naturalist.csl tradeoffms.md -o test.docx
+
 ```
