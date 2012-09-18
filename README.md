@@ -10,7 +10,7 @@ td1 (growth rate versus juvenile survival)
 	|_results
 	|_viz (visualization)
 
-td2 (adult survival versus fecundity)
+td2 (adult survival versus fecundity). This is now deprecated.
 	|_analysis
 	|_results
 	|_viz (visualization)
@@ -21,3 +21,12 @@ td1 (growth rate versus fecundity)
 	|_viz (visualization)
 ```
 Each trade off folder has a more detailed README.
+
+## Manuscript
+
+Current version of the manuscript is in the `manuscript/` folder. To update the `PDF` and `.docx` version to most current, run the following in pandoc:
+
+```
+pandoc -s -S --bibliography tradeoff.bib tradeoffms.md - o ms.pdf
+pandoc -s -S --bibliography tradeoff.bib tradeoffms.md - o ms.docx
+```
