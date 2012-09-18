@@ -28,8 +28,8 @@ Current version of the manuscript is in the `manuscript/` folder. To update the 
 
 ```
 # To generate a PDF
-pandoc -s -S --bibliography tradeoff.bib --mathjax --csl the-american-naturalist.csl tradeoffms.md -o test.pdf
+pandoc -s -S --bibliography tradeoff.bib --mathjax --csl the-american-naturalist.csl tradeoffms.md -o ms.pdf
 # To generate a word document.
-pandoc -s -S --bibliography tradeoff.bib --mathjax --csl the-american-naturalist.csl tradeoffms.md -o test.docx
+pandoc -s -S --bibliography tradeoff.bib --mathjax --csl the-american-naturalist.csl tradeoffms.md -o ms.docx
 
 ```
