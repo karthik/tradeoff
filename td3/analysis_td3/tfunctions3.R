@@ -38,7 +38,7 @@ do_tradeoff <- function(tlist) {
 }
 
 # ---------------------------------------------------
-# Running a vd model but with no variation in juvenile development or correlation among stages. Results should be identical to a matrix model case (with a small amout of simulation error)
+# Running a vd model but with no variation in juvenile development or correlation among stages. Results should be identical to a matrix model case (with a small amount of simulation error)
 run_vdm <- function(m, sJ, sA, Fec) {
     # message(sprintf("%s %s %s %s", m, sJ,sA,Fec))
     vdmodel <- suppressMessages(VD.model(num.stages = 2, marginal.durations = list(VD.dist("geomp1",

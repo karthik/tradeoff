@@ -75,10 +75,7 @@ s1$variation <- rep("variation", dim(s1)[1])
 s1[which(s1$cv==1), ]$variation <- "No variation"
 s1[which(s1$cv!=1), ]$variation <- "With variation"
 
-nc_plot <- 
-
-
-ggplot(subset(s1, s1$cor_status=="Correlation"), aes(cv,mstar))  + geom_point(size=4)  + ylim(0.35,.7) + facet_wrap(~corr)
+nc_plot <- ggplot(subset(s1, s1$cor_status=="Correlation"), aes(cv,mstar))  + geom_point(size=4)  + ylim(0.35,.7) + facet_wrap(~corr)
 
 
 low_plot <- ggplot(subset(s1, corr==0.2) , aes(cv,mstar, colour=variation))  + geom_point(size=4, aes(shape=cor_status), position = position_jitter(w = 0.001, h = 0.0)) + ylim(0.35,.7) +  scale_shape_manual(values=c(1,19))

@@ -120,8 +120,8 @@ save(working_simple, file="working_simple.rdata")
 
 # Next run generate_all_plots.R to visualize these results.
 # ------------------------------------------------------------------
-# pdf("tradeoff_plot.pdf", width = 8, height = 6) 
-# grid.newpage()
+pdf("tradeoff_plot.pdf", width = 8, height = 6) 
+grid.newpage()
 pushViewport(viewport(layout = grid.layout(3, 5)))
 vplayout <- function(x, y) viewport(layout.pos.row = x, layout.pos.col = y) 
 print(plota, vp = vplayout(1:2, 1:2)) 
@@ -136,4 +136,4 @@ print(plota, vp = vplayout(3, 2))
 print(plota, vp = vplayout(3, 3))
 print(plota, vp = vplayout(3, 4))
 print(plota, vp = vplayout(3, 5))
-# dev.off()
+dev.off()
