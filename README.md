@@ -2,7 +2,7 @@
 
 author: Karthik Ram, [karthik.ram@gmail.com](mailto:karthik.ram@gmail.com)
 
-This repository contains all the code for my paper on life history trade off analysis. I'll flesh this README more shortly but for the time being, here is the organizational set up:
+This repository contains all the code for my paper on life history trade off analysis. Basic organizational setup.
 
 ```
 td1 (growth rate versus juvenile survival)
@@ -15,7 +15,7 @@ td2 (adult survival versus fecundity). This is now deprecated.
 	|_results
 	|_viz (visualization)
 
-td1 (growth rate versus fecundity)
+td3 (growth rate versus fecundity)
 	|_analysis
 	|_results
 	|_viz (visualization)
