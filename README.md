@@ -22,6 +22,10 @@ td3 (growth rate versus fecundity)
 ```
 Each trade off folder has a more detailed README.
 
+## Required R dependencies
+
+`plyr`, `reshape2`, `ggplot2`, `varDev` (I am using an edited version saved as `varDev2`).
+
 ## Manuscript
 
 Current version of the manuscript is in the `manuscript/` folder. To update the `PDF` and `.docx` version to most current, run the following commands:
