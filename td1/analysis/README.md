@@ -1,11 +1,26 @@
 
-# Notes on running the first trade off.
+# Tradeoff between juvenile growth rate and maturation.
 
-1. First run `initialziation.R`
-2. Then make sure the pbs file core number lines up with `mc.cores` in corresponding scripts.
-3. Then upload functions, `*_params.rda`, `.R`, and `.pbs` file for each script. [Example](https://github.com/karthikram/tradeoff/blob/master/td1/analysis/juvshape.R#L4)
-4. Be sure to change the ID # of the run in the pbs file.
-5. zip the files, scp to server and unzip there.
-6. Cat files to make sure right ones got uploaded.
-7. Once results are done, then zip up `results/*` and copy to donwload folder and move to results on `td1/results`.
+```r
+initialize.R - generates all the parameter combinations
+tfunctions.R - contains all the functions necessary to run all the different tradeoffs including several helper functions. All functions are annotated.
+
+# Simple model
+simple.R
+simple.pbs (not in the public repo)
+
+# using the varDev version
+vardev.R 
+vardev.pbs
+
+# Now with variation in juvenile development
+juvshape.R
+juvshape.pbs
+
+# Now with added correlation.
+corr.R
+corr.pbs
+```
+
+To run any scenario (`simple.R`, `vardev.R`, `juvshape.R`, or `corr.R`), run the associated R script. If running locally, comment out the mclapply and run only the llply. If running on a cluster with greater than 4 cores, then use mclapply for a faster run.
 
