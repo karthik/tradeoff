@@ -1,9 +1,9 @@
 
-# Notes on simulation.
+# Notes on running the first trade off.
 
 1. First run `initialziation.R`
 2. Then make sure the pbs file core number lines up with `mc.cores` in corresponding scripts.
-3. Then upload functions, `*_params.rda`, `.R`, and `.pbs` file for each script.
+3. Then upload functions, `*_params.rda`, `.R`, and `.pbs` file for each script. [Example](https://github.com/karthikram/tradeoff/blob/master/td1/analysis/juvshape.R#L4)
 4. Be sure to change the ID # of the run in the pbs file.
 5. zip the files, scp to server and unzip there.
 6. Cat files to make sure right ones got uploaded.
