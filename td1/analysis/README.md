@@ -8,8 +8,6 @@
 ## Simple model
 `simple.R`
 
-`simple.pbs`(not in the public repo)
-
 ## using the varDev version
 `vardev.R` 
 
