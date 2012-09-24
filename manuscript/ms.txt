@@ -1,0 +1,127 @@
+Realistic stage-structured models alter the optimum expectation of classic life-history trade offs.
+===================================================================================================
+
+Karthik Ram and Perry de Valpine.
+
+Environmental Science, Policy & Management. University of California,
+Berkeley. Berkeley, CA 94720 karthik.ram@berkeley.edu
+
+* * * * *
+
+Introduction
+------------
+
+Components of the life history of an organism, such as the time it takes
+to reach maturity, stage-specific survival rate etc. are of considerable
+interest to both theoretical and applied ecologists alike. Trade offs
+between such traits allow organisms, especially ones with complex life
+histories, to choose an optimal strategy that maximizes their
+reproductive fitness over a range of environmental conditions (Houssard
+et al., 1991). The diversity of strategies observed in nature are in
+large part the result of of such tradeoffs between vital traits (Law,
+1979). Understanding trade offs has been fundamental to understanding
+conditions that favor the evolution of iteroparity versus semelarity
+(Cole, 1954; Gadgil et al., 1970; Stearns, 1989). Ecologists have
+examined trade-offs to solve applied problems such as the spread of
+infectious diseases and pests under global change (Woodhams et al.,
+2008).
+
+Although there are various methods to understand tradeoffs, mathematical
+models provide a particularly versatile and powerful way to examine the
+importance of vital rates, and how trade offs between rates alter the
+evolutionary trajectory of a species. Matrix population models,
+especially, have proved extremeley useful both in a theoretical and
+applied context (Caswell, 2001). These models can be applied to a
+variety of organisms such as plants and insects that transition through
+distinct development stages, but can also be applied to organisms that
+mature through distinct size classes, which can be treated abstractly as
+stages (Caswell, 2009). Matrix models have been provided numerous
+insights into conservation issues (Morris et al., 2002, ) and
+evolutionary ecology (Lande, 1982), the popularity driven primarily by
+its simplicity and ease of interpretation.
+
+Despite its popularity, matrix population models fail to incorporate an
+adequate level biological realism that characteize most populations in
+nature. For example, matrix models fail to capture variation in
+development time among individuals both within and between stages (de
+Valpine, 2009). Stage structured models typically assume that time spent
+in a stage is geometrically distributed, an assumption that is not
+realistic for most organisms. Therefore, ecologists looking to
+incorporate more realism must look beyond simple matrix models (de
+Valpine, 2009). Several authors have provided modifications to the
+matrix model to overcome such limitations (Caswell, 2001) althogh not
+all have been widely adopted (de Valpine, 2009). (Need to include a
+fleshed out section describing the IPM generalization of the matrix
+model).
+
+These new methods and implementation techniques provide an easy-way to
+incorporate variable development into matrix models and revisit
+ecological theory. In particular, this new technique provides an
+opportunity to reexamine classic life history trade offs, such as the
+one between growth rate and survival, or fecundity and maturation rate,
+under more complex assumptions. Here we reassess classic ecological
+trade offs between maturation (both adult and juvenile) and growth rate
+(Takada, 1995). In this paper, we investigate the role of incorporating
+additional complexity in matrix population models, such as realistic
+assumptions about time spent in a stage, and add further complexity in
+the form of correlation among stages. We used the Lefkovitch matrix
+model to describe stage structured population models with reproduction
+and survival. To maintain a simple story, we also restrict our efforts
+to a two-stage model (juveniles and adults) in a density-independent
+case, although our analyses could easily be extended to larger number of
+classes. We analyze the outcome with varying levels of compelxity, from
+the simple matrix case all the way to incorporating variation in
+development time within stages and correlation between stages. We then
+compare how the optimal trade off strategy shifts as a result of these
+new assumptions.
+
+Model Description
+-----------------
+
+Literature Cited
+----------------
+
+Caswell, H. 2001. *Matrix Population Models: Construction, Analysis and
+Interpretation*. Sinauer Associates Inc., Sunderland,MA.
+
+Caswell, H. 2009. Stage, age and individual stochasticity in demography.
+Oikos 118:1763–1782.
+
+Cole, L. C. 1954. The population consequences of life history phenomena.
+Quarterly Review of Biology 28:218–228.
+
+Gadgil, M., & Bossert, W. H. 1970. Life history consequences of natural
+selection. The American Naturalist 102:52–64.
+
+Heppell, S. S. 1998. Application of life-history theory and population
+model analysis to turtle conservation. Copeia 1998:367–375.
+
+Houssard, C., & Escarre, J. 1991. The effects of seed weight on growth
+and competitive ability of Rumex acetosella from two successional old
+fields. Oecologia 86:236–242.
+
+Lande, R. 1982. A quantitative genetic theory of life history evolution.
+Ecology 63:607–615.
+
+Law, R. 1979. Ecological determinants in the evolution of life
+histories. In B. D. T. &. L. R. T. R. M. Anderson (Ed.), Population
+Dynamics (pp. 81–103). Blackwell Science, Oxford.
+
+Morris, W. F., & Doak, D. F. 2002. *Quantitative conservation biology:
+Theory and practice of population viability analysis*. Sinauer
+Associates Inc., Sunderland,MA.
+
+Stearns, S. C. 1989. Trade-offs in life-history evolution. Functional
+Ecology 3:259–268.
+
+Takada, T. 1995. Evolution of Semelparous and Iteroparous Perennial
+Plants: Comparison between the Density-independent and Density-dependent
+Dynamics. Journal of Theoretical Biology 173:51–60.
+
+Woodhams, D. C., Alford, R. a, Briggs, C. J., Johnson, M., &
+Rollins-Smith, L. a. 2008. Life-history trade-offs influence disease in
+changing climates: strategies of an amphibian pathogen. Ecology
+89:1627–39.
+
+de Valpine, P. 2009. Stochastic development in biologically structured
+population models. Ecology 90:2889–2901.
