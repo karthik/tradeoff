@@ -3,7 +3,8 @@ personal_notes/*
 cluster_junk/
 *.zip
 *.rda
-*.pdf
+td1/*.pdf
+td1/viz/pdfs/*.pdf
 *.pbs
 td1/*.pbs
 original_example.R
