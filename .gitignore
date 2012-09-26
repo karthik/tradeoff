@@ -11,4 +11,5 @@ original_example.R
 resources/*
 misc/*
 manuscript/*.scriv
+manuscript/.texpadtmp
 *.scriv
