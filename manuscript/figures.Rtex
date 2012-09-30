@@ -1,0 +1,26 @@
+\documentclass{article}
+\begin{document}
+
+<<out.extra='angle=90'>>=
+library(ggplot2)
+library(grid)
+df <- data.frame(x = 1:100, y =rnorm(100))
+plota <- ggplot(df, aes(x, y)) + geom_point(size = 4)
+
+pushViewport(viewport(layout = grid.layout(3, 5)))
+vplayout <- function(x, y) viewport(layout.pos.row = x, layout.pos.col = y) 
+        print(plota, vp = vplayout(1:2, 1:2)) 
+        print(plota, vp = vplayout(1, 3)) 
+        print(plota, vp = vplayout(1, 4))
+        print(plota, vp = vplayout(1, 5))
+        print(plota, vp = vplayout(2, 3)) 
+        print(plota, vp = vplayout(2, 4))
+        print(plota, vp = vplayout(2, 5))
+        print(plota, vp = vplayout(3, 1))
+        print(plota, vp = vplayout(3, 2))
+        print(plota, vp = vplayout(3, 3))
+        print(plota, vp = vplayout(3, 4))
+        print(plota, vp = vplayout(3, 5))
+@
+
+\end{document}

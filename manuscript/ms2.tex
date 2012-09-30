@@ -1,8 +1,10 @@
 \documentclass[]{article}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
+\usepackage[vmargin=1in,hmargin=1in]{geometry}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
+\RequirePackage{lineno}
 \usepackage{fixltx2e} % provides \textsubscript
 % use microtype if available
 \IfFileExists{microtype.sty}{\usepackage{microtype}}{}
@@ -40,7 +42,7 @@
 \date{}
 
 \begin{document}
-
+\linenumbers
 \section{Realistic stage-structured models alter the optimum expectation
 of classic life-history trade offs.}
 
@@ -94,10 +96,9 @@ realistic for most organisms. Therefore, ecologists looking to
 incorporate more realism must look beyond simple matrix models (de
 Valpine, 2009). Several authors have provided modifications to the
 matrix model to overcome such limitations (Caswell, 2001) althogh not
-all have been widely adopted (de Valpine, 2009). Integral projection
-models provide a way to incorporate such compexity (Easterling et al.,
-2000; Ellner et al., 2006) (Need to include a fleshed out section
-describing the IPM generalization of the matrix model).
+all have been widely adopted (de Valpine, 2009). (Need to include a
+fleshed out section describing the IPM generalization of the matrix
+model).
 
 These new methods and implementation techniques provide an easy-way to
 incorporate variable development into matrix models and revisit
@@ -108,27 +109,23 @@ under more complex assumptions. Here we reassess classic ecological
 trade offs between maturation (both adult and juvenile) and growth rate
 (Takada, 1995).
 
-In this paper, we investigate the how incorporating additional
-complexity in matrix population models, such as more realistic
-assumptions about time spent in a stage, and correlation between stages
-alters the optimum of ecological trade offs. We used the Lefkovitch
-matrix model to describe stage structured population models with
-reproduction and survival. To maintain a simple story, we also restrict
-our efforts to a two-stage model (juveniles and adults) in a
-density-independent case, although our analyses could easily be extended
-to larger number of classes. We analyze the outcome with varying levels
-of compelxity, from the simple matrix case all the way to incorporating
-variation in development time within stages and correlation between
-stages. We then compare how the optimal trade off strategy shifts as a
-result of these new assumptions.
+In this paper, we investigate the role of incorporating additional
+complexity in matrix population models, such as realistic assumptions
+about time spent in a stage, and add further complexity in the form of
+correlation among stages. We used the Lefkovitch matrix model to
+describe stage structured population models with reproduction and
+survival. To maintain a simple story, we also restrict our efforts to a
+two-stage model (juveniles and adults) in a density-independent case,
+although our analyses could easily be extended to larger number of
+classes. We analyze the outcome with varying levels of compelxity, from
+the simple matrix case all the way to incorporating variation in
+development time within stages and correlation between stages. We then
+compare how the optimal trade off strategy shifts as a result of these
+new assumptions.
+
+$M = \left( \begin{matrix} a&b\\ c&d \end{matrix} \right)$  
 
 \subsection{Model Description}
-
-$\left[ \begin{matrix} J(t+1)\\ A(t+1) \end{matrix} \right] = \left[ \begin{matrix} (1-m) \mu J& F\\ m \mu J&\mu A \end{matrix} \right] \left[ \begin{matrix} J(t)\\ A(t) \end{matrix} \right]$
-
-Where $\mu J(t)$ and $\mu A(t)$ represent juvenile and adult mortality,
-\texttt{m} is the maturation rate and $J(t)$ and $A(t)$ are the
-juveniles and adults.
 
 \subsection{Literature Cited}
 
@@ -140,13 +137,6 @@ Oikos 118:1763--1782.
 
 Cole, L. C. 1954. The population consequences of life history phenomena.
 Quarterly Review of Biology 28:218--228.
-
-Easterling, M. R., Ellner, S. P., \& Dixon, P. M. 2000. Size-specific
-sensitivity: applying a new structured population model. Ecology
-81:694--708.
-
-Ellner, S. P., \& Rees, M. 2006. Integral projection models for species
-with complex demography. The American naturalist 167:410--428.
 
 Gadgil, M., \& Bossert, W. H. 1970. Life history consequences of natural
 selection. The American Naturalist 102:52--64.
