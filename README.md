@@ -10,11 +10,6 @@ td1 (growth rate versus juvenile survival)
 	|_results
 	|_viz (visualization)
 
-td2 (adult survival versus fecundity). This is now deprecated.
-	|_analysis
-	|_results
-	|_viz (visualization)
-
 td3 (growth rate versus fecundity)
 	|_analysis
 	|_results
