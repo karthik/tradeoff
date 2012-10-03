@@ -1,5 +1,6 @@
 
 # Literature survey (contd)
+---
 
 # Review of remaining papers in my literature search
 
@@ -86,14 +87,7 @@ PERHAPS MORE THAN WE NEED.
 
 I should add this paper to the list:
 
-Partridge, L. & Harvey, P.H. (1988) The ecological context of life-history evo- lution. Science, 241, 1449–1455.
+Lesica, P.&Young,T.P. (2005)A demographic model explains life-history variation in Arabis fecunda. Functional Ecology, 19, 471–477.
 
-Cochran, M.E. & Ellner, S. (1992) Simple methods for calculating age-based life history parameters for stage structured populations. Ecological Mono- graphs, 62, 345–364.
 
-Lesica, P.&Young,T.P. (2005)Ademographicmodel explains life-history var- iation in Arabis fecunda. Functional Ecology, 19, 471–477.
 
-Schaffer, 1974. Selection for optimal life histories: the effects of age structure: ecology, 55, 291-303
-
-Bell 1980. The cost of reproduction and their consequences. American Naturalist 116, 45-76
-
-Bell and Koufopanou v 1986 The cost of reproduction. oxford survey evol bio 3 83-131.

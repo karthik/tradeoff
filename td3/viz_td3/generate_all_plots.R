@@ -48,15 +48,15 @@ no_correlation <- subset(temp, type!="corr")
 
 
 
-plot1 <- ggplot(actual_tradeoff, aes(x,y)) + geom_line(colour="#a1323a", size = 1) + xlab("Maturation Rate") + ylab("Juvenile Survival") + theme(panel.background= theme_blank()) + theme(axis.line=theme_segment())
+plot1 <- ggplot(actual_tradeoff, aes(x,y)) + geom_line(colour="#a1323a", size = 1) + xlab("Maturation Rate") + ylab("Juvenile Survival") + theme(panel.background= element_blank()) + theme(axis.line=element_line())
 
-plot2 <- ggplot(xx, aes(m, lambda, colour=type)) + geom_point(size=3.5, shape=1) + xlab("Juvenile survival") + ylab("Lambda") + theme(panel.background= theme_blank()) + theme(axis.line=theme_segment())
+plot2 <- ggplot(xx, aes(m, lambda, colour=type)) + geom_point(size=3.5, shape=1) + xlab("Juvenile survival") + ylab("Lambda") + theme(panel.background= element_blank()) + theme(axis.line=element_line())
 	
 
-plot3 <- ggplot(high_correlation, aes(cv,mstar)) + geom_point(size=3.2, aes(shape = type)) + theme(panel.background= theme_blank()) + theme(axis.line=theme_segment())
+plot3 <- ggplot(high_correlation, aes(cv,mstar)) + geom_point(size=3.2, aes(shape = type)) + theme(panel.background= element_blank()) + theme(axis.line=element_line())
 	
 
-plot4 <- ggplot(no_correlation, aes(cv,mstar,colour = type)) + geom_point(size=3.2, aes(shape = type)) + theme(panel.background= theme_blank()) + theme(axis.line=theme_segment())
+plot4 <- ggplot(no_correlation, aes(cv,mstar,colour = type)) + geom_point(size=3.2, aes(shape = type)) + theme(panel.background= element_blank()) + theme(axis.line=element_line())
 	
 plot1
 ggsave(file="~/Desktop/plot1.eps")

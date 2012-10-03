@@ -277,12 +277,13 @@ param_combs_corr <- function(a, b, sA, Fec, juvshape, corr) {
 
 # ---------------------------------------
 # A simple spline to smooth simulated points and find the max.
+# Increased the n if m from around 100, to 10k. Hopefully this should get me more resolution on the issue.
 arg_max <- function(data) {
 m <- data$m
 lambda <- data$lambda
 m1 <- mgcv::gam(lambda ~ s(m, fx = FALSE, k=-1, bs = "cr"))
-predm <- predict(m1, data.frame(m = seq(0.01, 0.99, by = 0.1)), se=TRUE)$fit
-pm <- seq(0.01, 0.99, by = 0.1)
+predm <- predict(m1, data.frame(m = seq(0.01, 0.99, length = 10000)), se=TRUE)$fit
+pm <- seq(0.01, 0.99, length = 100000)
 maxy <- max(predm)
 maxx <- pm[which(predm == max(predm))]
 return(list(maxx, maxy))

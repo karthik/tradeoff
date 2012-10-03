@@ -1,0 +1,24 @@
+# Individual heterogeneity in development changes life history optimization
+
+Karthik Ram and Perry de Valpine
+
+Environmental Science, Policy, & Management, University of California, Berkeley, Berkeley CA. USA.
+
+karthik.ram@berkeley.edu
+
+# Introduction
+
+
+[Some of the text in your draft, especially the first paragraph, could fit well in this.]
+
+Organisms inevitably face tradeoffs between processes such as growth, survival and reproduction.  Life history theory attempts to predict the outcome of natural selection on life history traits under different tradeoffs.  From its origins with very simple models, life history theory has been extended to consider increasingly realistic models.  These have included environmental stochasticity, individual behavior, density-dependence, and frequency-dependence, among other processes.  Some of these considerations can strongly change the optimal life history strategy, and the question remains what other factors are essential for obtaining realistic predictions of life history traits.
+
+Individual heterogeneity in demographic traits can impact population growth rate, species interactions, and nonlinear population dynamics.   Population growth rate is equivalent to the fitness of a life history strategy under density-independence or if density-dependence impacts all individuals.  Therefore, if the effect of individual variation on population growth rate is different for different life history strategies, then individual variation could change the outcome of life history evolution.  [Here the issue of exactly what other people have shown about individual heterogeneity on life history evolution will be key to how to frame our argument.]  An additional but less explored question is how correlations among heterogeneous life history traits could impact life history evolution.
+
+Here we show that individual stochasticity in development time, with realistic developmental delays, as well as correlations between development time and adult longevity, can have a major impact on optimization of development rate under tradeoffs with survival or reproduction.  Variation in development time is very common, yet is rarely modeled realistically.  Matrix models treat every individual as having a constant rate of maturing in each time step, and such models have been used to examine optimal maturation rate.  While such models can be derived as transition rates at the stable stage distribution resulting from a more realistic development process (Caswell), they are often taken literally as the starting point for considering population dynamics and evolution (Barfield et al.).  Taken literally, a matrix model with maturation rate m says there is a geometric distribution of the development time (time until maturation) with mean 1/m, which is not very realistic.   On the other hand, delay-differential equation models include a realistic developmental delay, but in their simplest form they omit any variation in development time.  Thus, common life history models of development rate are unrealistic for purposes of life history theory.
+
+Several recent models have extended stage-structured matrix models to incorporate individual heterogeneity in development.  The method of [@deValpine2009] allows specification of a distribution for the time spent in each stage, and for these distributions to be correlated.  Time spent in the last stage corresponds to adult longevity.  In this framework, an exponential time in a stage corresponds (when time is discretized) to the geometric distribution of a matrix model.  At the other extreme, a development time distribution with very small variance corresponds to a delay-differential equation model.  Thus this framework allows a spectrum between matrix models and delay-differential equation models.  Other approaches include... [Mention a phrase each about Caswell, Birt, Vindenes, and the linear chain trick].
+
+Using the stochastic development model of [@deValpine2009], we ask how different distributions of development time and correlations between development time and adult longevity impact life history evolution.  We take a simple optimization approach, and we consider tradeoffs between development rate and juvenile survival and between development rate and adult fecundity.
+
+
